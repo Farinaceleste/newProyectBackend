@@ -1,0 +1,152 @@
+[
+    {
+        "id": 1,
+        "title": "Psycho",
+        "description": "A horror-thriller about a young woman who is murdered in a motel after stealing money from her employer.",
+        "thumbnail": "https://example.com/psycho-thumbnail.jpg",
+        "price": 12.99,
+        "code": "1",
+        "status": "true",
+        "stock": 100
+    },
+    {
+        "id": 2,
+        "title": "Rear Window",
+        "description": "A thriller-drama about a wheelchair-bound photographer spying on his neighbors, suspecting one of them has committed murder.",
+        "thumbnail": "https://example.com/rear-window-thumbnail.jpg",
+        "price": 11.99,
+        "code": "2",
+        "status": "true",
+        "stock": 50
+    },
+    {
+        "id": 3,
+        "title": "The Birds",
+        "description": "A horror-thriller about a series of sudden, unexplained bird attacks.",
+        "thumbnail": "https://example.com/the-birds-thumbnail.jpg",
+        "price": 13.99,
+        "code": "3",
+        "status": "true",
+        "stock": 75
+    },
+    {
+        "id": 4,
+        "title": "Vertigo",
+        "description": "A psychological thriller-drama about a retired police detective who becomes obsessed with a mysterious woman.",
+        "thumbnail": "https://example.com/vertigo-thumbnail.jpg",
+        "price": 14.99,
+        "code": "4",
+        "status": "true",
+        "stock": 100
+    },
+    {
+        "id": 5,
+        "title": "North by Northwest",
+        "description": "A thriller-drama about a New York City advertising executive who is mistaken for a spy.",
+        "thumbnail": "https://example.com/north-by-northwest-thumbnail.jpg",
+        "price": 15.99,
+        "code": "5",
+        "status": "true",
+        "stock": 75
+    },
+    {
+        "id": 6,
+        "title": "Strangers on a Train",
+        "description": "A thriller-drama about two strangers who meet on a train and plan to commit each other's murders.",
+        "thumbnail": "https://example.com/strangers-on-a-train-thumbnail.jpg",
+        "price": 11.99,
+        "code": "6",
+        "status": "true",
+        "stock": 100
+    },
+    {
+        "id": 7,
+        "title": "Dial M for Murder",
+        "description": "A thriller-drama about a retired tennis pro who hatches a plan to kill his wife.",
+        "thumbnail": "https://example.com/dial-m-for-murder-thumbnail.jpg",
+        "price": 12.99,
+        "code": "7",
+        "status": "true",
+        "stock": 75
+    }, 
+    {
+        "id": 8,
+        "title": "Oppenheimer",
+        "description": "Christopher Nolan's latest epic film about J. Walter Oppenheimer and the creation of the atomic bomb.",
+        "thumbnail": "https://example.com/oppenheimer.jpg",
+        "price": 12.99,
+        "code": "CPN1",
+        "status": true,
+        "stock": 100
+      },
+      {
+        "id": 9,
+        "title": "Interstellar",
+        "description": "A space exploration film that follows a group of astronauts as they travel through a wormhole in search of a new home for humanity.",
+        "thumbnail": "https://example.com/interstellar.jpg",
+        "price": 11.99,
+        "code": "CPN2",
+        "status": true,
+        "stock": 200
+      },
+      {
+        "id": 10,
+        "title": "Inception",
+        "description": "A heist film set in a dream world where a team of thieves must infiltrate a target's subconscious and steal their secrets.",
+        "thumbnail": "https://example.com/inception.jpg",
+        "price": 10.99,
+        "code": "CPN3",
+        "status": true,
+        "stock": 300
+      },
+      {
+        "id": 11,
+        "title": "The Dark Knight",
+        "description": "The second installment in Nolan's Batman trilogy, where Batman faces off against his greatest nemesis, the Joker.",
+        "thumbnail": "https://example.com/darkknight.jpg",
+        "price": 9.99,
+        "code": "CPN4",
+        "status": true,
+        "stock": 400
+      },
+      {
+        "id": 12,
+        "title": "The Dark Knight Rises",
+        "description": "The final installment in Nolan's Batman trilogy, where Batman must confront his greatest enemy and save Gotham City from destruction.",
+        "thumbnail": "https://example.com/darkknightrises.jpg",
+        "price": 10.99,
+        "code": "CPN5",
+        "status": true,
+        "stock": 500
+      },
+      {
+        "id": 13,
+        "title": "Batman Begins",
+        "description": "The first installment in Nolan's Batman trilogy, where Bruce Wayne must confront his past and become the hero Gotham needs.",
+        "thumbnail": "https://example.com/batmanbegins.jpg",
+        "price": 11.99,
+        "code": "CPN6",
+        "status": true,
+        "stock": 600
+      },
+      {
+        "id": 14,
+        "title": "Dunkirk",
+        "description": "A war film set during the evacuation of Dunkirk during World War II, where a group of soldiers must fight for their survival.",
+        "thumbnail": "https://example.com/dunkirk.jpg",
+        "price": 12.99,
+        "code": "CPN7",
+        "status": true,
+        "stock": 700
+      },
+      {
+        "id": 15,
+        "title": "The Prestige",
+        "description": "A film about two rival magicians in the late 19th century who will stop at nothing to outdo each other and become the best in the business.",
+        "thumbnail": "https://example.com/prestige.jpg",
+        "price": 13.99,
+        "code": "CPN8",
+        "status": true,
+        "stock": 800
+      }
+]

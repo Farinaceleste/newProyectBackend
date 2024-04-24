@@ -1,0 +1,43 @@
+
+
+
+<h2>¡Bienvenido {{user.first_name}} {{user.last_name}}!</h2>
+
+
+
+<h1>Listado de productos: </h1>
+
+{{>menu}}
+<hr>
+
+<div class="productList">
+
+    {{#each docs}}
+    <ul>
+        <div id="addForm">
+            <li>{{this.title}} - ${{this.price}} - {{this.description}}</li>
+            <button id="add-to-cart-{{this._id}}"type="submit" data-product-id="{{this._id}}">Agregar al carrito</button>
+        </div>
+    </ul>
+    {{/each}}
+
+    <a href="/?page=1">Pág.1</a>
+
+    {{#if hasPrevPage}}
+    <a href="/?page={{prevPage}}">Pág.Anterior</a>
+    {{/if}}
+
+    {{#if hasNextPage}}
+    <a href="/?page={{nextPage}}">Pág.Siguiente</a>
+    {{/if}}
+
+    {{#if hasNextPage}}
+    <a href="/?page={{totalPages}}">Ult.página</a>
+    {{/if}}
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/home.js"></script>
+
+
