@@ -14,4 +14,4 @@ export const rutaCarts = join(__dirname, "data", "carts.json")
 const SECRET = "CoderCoder123"
 // export const creaHash = password => crypto.createHmac("sha256", SECRET).update(password).digest('hex')
 export const creaHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10))
-export const validPassword = (user, password) => bcrypt.compareSync(password, user.password)
+export const validaPassword = (password, passwordConHash) => bcrypt.compareSync(password, passwordConHash)
