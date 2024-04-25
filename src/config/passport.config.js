@@ -110,10 +110,6 @@ export const initPassport = () => {
         )
     )
 
-
-
-
-
     passport.serializeUser((user, done) => {
         return done(null, user)
     })

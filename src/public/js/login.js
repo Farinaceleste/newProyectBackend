@@ -12,33 +12,45 @@ btnSubmit.addEventListener('click', async (e) => {
         password: inputPassword.value
     }
 
-    let resultado = await fetch("/api/sessions/login", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(body)
-    })
 
-    let status = resultado.status
-    let datos = await resultado.json()
-    if (status == 200) {
-        Swal.fire ({
-            title: 'Login exitoso', 
-            confirmButtonText:  `Aceptar`,   
-            icon: 'success',  
-        }).then((result) => {
-            location.href ="/perfil"
+    try {
+        let resultado = await fetch("/api/sessions/login", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
         })
-        
-    } else {
-        Swal.fire ({
-            title: 'ERROR', 
-            confirmButtonText:  `Aceptar`,  
-            text: 'Usuario y/o contraseña incorrectos',
-            icon: 'error',  
+
+        let status = resultado.status
+        let datos = await resultado.json()
+        if (status == 200) {
+            Swal.fire({
+                title: 'Login exitoso',
+                confirmButtonText: `Aceptar`,
+                icon: 'success',
+            }).then((result) => {
+                location.href = "/perfil"
+            })
+
+        } else {
+            Swal.fire({
+                title: 'ERROR',
+                confirmButtonText: `Aceptar`,
+                text: 'Usuario y/o contraseña incorrectos',
+                icon: 'error',
+            })
+        }
+    } catch (error) {
+        console.error(error)
+        Swal.fire({
+            title: 'ERROR',
+            confirmButtonText: `Aceptar`,
+            text: 'Usuario y/o contraseña incorrectos.',
+            icon: 'error',
         })
     }
+
 
 })
 

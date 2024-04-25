@@ -88,6 +88,7 @@ router.post('/login', passport.authenticate('login', {failureRedirect:'api/sessi
     //     res.redirect('/profile')
     // }
 
+
     res.setHeader('Content-Type', 'application/json')
     res.status(200).json({ message: 'login correcto', user: req.user })
 
