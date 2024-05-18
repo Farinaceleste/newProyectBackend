@@ -1,12 +1,10 @@
 import { Router } from "express";
-import { ProductManager } from "../dao/productmanager.js";
+import { ProductManager } from "../dao/ProductMongoDAO.js";
 import { rutaCarts, rutaProducts } from "../utils.js";
 import mongoose from "mongoose";
-import { CartManager } from "../dao/cartmanager.js";
+import { CartManager } from "../dao/CartMongoDAO.js";
+import  ProductsController  from '../controller/products.controller.js'
 export const router = Router();
-
-let productmanager = new ProductManager(rutaProducts);
-let cartmanager = new CartManager(rutaCarts)
 
 router.get('/', async (req, res) => {
 
@@ -135,30 +133,6 @@ router.put("/:id", async (req, res) => {
 
 })
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", ProductsController.deleteProducts)
 
-  let { id } = req.params
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    res.setHeader("Content-Type", "application/json")
-    res.status(400).json({ error: "id inválido" });
-  }
-
-  try {
-    let resultado = await productmanager.deleteProducts(id)
-    if (resultado.deletedCount > 0) {
-      res.setHeader("Content-Type", "application/json")
-      res.status(200).json({
-        message: `Se ha eliminado el producto con id: ${id}`
-      })
-    } else {
-      res.setHeader("Content-Type", "application/json")
-      res.status(400).json({ error: `No existen productos con el id: ${id}` });
-    }
-
-  } catch (error) {
-    res.setHeader("Content-Type", "application/json")
-    return res.status(500).json({ error: 'Error en el servidor' });
-
-  }
-
-})
+router.get ('/', ProductsController.getProducts)

@@ -16,7 +16,6 @@ const productsSchema = new mongoose.Schema (
     {
         timeStramps: true, strict:false
     }
-
 )
 
 productsSchema.plugin(paginate)

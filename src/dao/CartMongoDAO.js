@@ -1,8 +1,6 @@
-
 import { modeloCarts } from "./models/carts.models.js"
 
-export class CartManager{
-
+export class CartMongoDAO{
 
     async getCarts() { 
 

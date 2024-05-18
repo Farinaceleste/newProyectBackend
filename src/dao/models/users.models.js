@@ -6,10 +6,13 @@ export const usersModelo = mongoose.model ('users', new mongoose.Schema({
         last_name: String, 
         email: {
             type: String, 
-            unique: true
+            unique: true, 
+            required: true
         }, 
         password: String, 
-        age: Number 
+        age: Number, 
+        role: String
+       
         },
         {   
             timestamps: true, strict: false 

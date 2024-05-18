@@ -1,8 +1,6 @@
 import { modeloProducts } from "./models/products.models.js"
 
-
-export class ProductManager {
-
+export class ProductMongoDAO {
 
     async getProducts(page, limit) {
         //return await modeloProducts.find().lean()
@@ -37,6 +35,10 @@ export class ProductManager {
             console.error('Error al obtener los productos:', error);
             throw error;
         }
+    }
+
+    async getProducts () {
+        return await modeloProducts.find().lean()
     }
 
     async addProducts(product) {

@@ -1,10 +1,10 @@
 import passport from "passport";
 import local from "passport-local";
-import { UsuariosManagerMongo } from "../dao/usersmanager.js";
+import { UsuariosMongoDAO } from "../dao/UserMongoDAO.js";
 import { creaHash, validaPassword } from "../utils.js";
 import github from "passport-github2";
 
-let userManager = new UsuariosManagerMongo()
+let userManager = new UsuariosMongoDAO()
 
 export const initPassport = () => {
 
@@ -80,8 +80,8 @@ export const initPassport = () => {
         'github',
         new github.Strategy(
             {
-                clientID: 'Iv1.17565cf9e9e26584',
-                clientSecret: 'f8b46dc73d16d58b2ec3b9f5ad0203edfca9040d',
+                clientID: process.clientID,
+                clientSecret: process.clientSecret,
                 callbackURL: 'http://localhost:8080/api/sessions/callbackGithub'
             },
             async (accessToken, refreshToken, profile, done) => {
@@ -118,6 +118,3 @@ export const initPassport = () => {
         return done(null, user)
     })
 }
-
-
-

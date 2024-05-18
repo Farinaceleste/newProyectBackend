@@ -1,8 +1,10 @@
+import { auth } from "../../dao/middlewares/auth"
 
 let btnSubmit = document.getElementById("submit")
 let inputEmail = document.getElementById("email")
 let inputPassword = document.getElementById("password")
 let divMensaje = document.getElementById("mensaje")
+let linkUsuarios = document.getElementById('linkUsuarios')
 
 btnSubmit.addEventListener('click', async (e) => {
     e.preventDefault()
@@ -11,7 +13,6 @@ btnSubmit.addEventListener('click', async (e) => {
         email: inputEmail.value,
         password: inputPassword.value
     }
-
 
     try {
         let resultado = await fetch("/api/sessions/login", {
@@ -24,6 +25,8 @@ btnSubmit.addEventListener('click', async (e) => {
 
         let status = resultado.status
         let datos = await resultado.json()
+        console.log(datos)
+        
         if (status == 200) {
             Swal.fire({
                 title: 'Login exitoso',
@@ -50,11 +53,26 @@ btnSubmit.addEventListener('click', async (e) => {
             icon: 'error',
         })
     }
-
-
 })
 
+linkUsuarios.addEventListener('click', async (e)=>{
+    e.preventDefault()
 
+    let respuesta = await fetch ('api/sessions/usuario', {
+        method: 'GET', 
+        headers: {
+            'Content-Type':'application/json'
+        }
+    })
+
+    try {
+        let info = await respuesta.json ()
+        console.log(info)
+        user.textContent=JSON.stringify(info)
+    } catch (error) {
+        console.log(respuesta.status)
+    }
+})
 
 
 

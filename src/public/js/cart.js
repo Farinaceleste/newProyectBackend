@@ -6,9 +6,6 @@ document.querySelectorAll("button[data-product-id]").forEach(button => {
     });
 });
 
-
-
-
 async function borrar(cid, pid) {
 
     const url = `http://localhost:8080/api/carts/${cid}/products/${pid}`

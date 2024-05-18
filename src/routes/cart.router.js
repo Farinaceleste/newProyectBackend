@@ -1,9 +1,8 @@
 import { Router } from "express";
-import { ProductManager } from "../dao/productmanager.js";
+import { ProductManager } from "../dao/ProductMongoDAO.js";
 import { rutaCarts, rutaProducts } from "../utils.js";
-import { CartManager } from "../dao/cartmanager.js";
+import { CartManager } from "../dao/CartMongoDAO.js";
 import mongoose from "mongoose";
-import { modeloCarts } from "../dao/models/carts.models.js";
 export const router = Router()
 
 

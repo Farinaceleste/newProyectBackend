@@ -12,16 +12,17 @@ import { initPassport } from "./config/passport.config.js";
 import passport from "passport";
 import { router as vistasRouter } from "./routes/vistas.router.js";
 import { router as sessionsRouter } from './routes/sessions.router.js';
+import cookieParser from "cookie-parser";
 
-
-const PORT = 8080;
+const PORT = process.PORT;
 
 const app = express()
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser('CoderCoder123'))
 app.use(session(
     {
-        secret: "CoderCoder123", 
+        secret: process.secret, 
         resave: true,
         saveUninitialized:true, 
         store: MongoStore.create({
@@ -33,11 +34,7 @@ app.use(session(
 
 initPassport()
 app.use(passport.initialize())
-app.use(passport.session())
-
-
-
-
+//app.use(passport.session())
 
 app.engine("handlebars", engine())
 app.set("view engine", "handlebars")
@@ -114,7 +111,7 @@ const connect = async () => {
         //console.log('Conectado a Mongosh')
 
         //MONGO ATLAS Base de datos en Atlas
-        await mongoose.connect("mongodb+srv://farinaceleste:cele6146@cluster0.nwo2jkx.mongodb.net/ecommerce")
+        await mongoose.connect(process.mongooseConnect)
         console.log('Conectado a Mongo Atlas')
     }
     catch (error) {

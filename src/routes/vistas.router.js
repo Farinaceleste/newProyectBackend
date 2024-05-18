@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { ProductManager } from "../dao/productmanager.js";
+import { ProductManager } from "../dao/ProductMongoDAO.js"
 import { rutaProducts, rutaCarts } from "../utils.js";
-import { CartManager } from "../dao/cartmanager.js";
+import { CartManager } from "../dao/CartMongoDAO.js";
 import { auth } from "../dao/middlewares/auth.js";
 
 
