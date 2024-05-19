@@ -3,8 +3,9 @@ import local from "passport-local";
 import { UsuariosMongoDAO } from "../dao/UserMongoDAO.js";
 import { creaHash, validaPassword } from "../utils.js";
 import github from "passport-github2";
+import { config } from "./config.js";
 
-let userManager = new UsuariosMongoDAO()
+let usersDAO = new UsuariosMongoDAO()
 
 export const initPassport = () => {
 
@@ -23,7 +24,7 @@ export const initPassport = () => {
                         return done(null, false)
                     }
 
-                    let existe = await userManager.getBy({ email: username })
+                    let existe = await usersDAO.getBy({ email: username })
 
                     if (existe) {
                         return done(null, false)
@@ -31,7 +32,7 @@ export const initPassport = () => {
 
                     password = creaHash(password)
 
-                    let user = await userManager.create({
+                    let user = await usersDAO.create({
                         first_name, password, email: username
                     })
 
@@ -41,13 +42,11 @@ export const initPassport = () => {
                         return done(null, false)
                     }
 
-
                 } catch (error) {
                     return done(error)
                 }
             }
         )
-
     )
 
     passport.use(
@@ -58,7 +57,7 @@ export const initPassport = () => {
             },
             async (username, password, done) => {
                 try {
-                    let user = await userManager.getBy({email: username}) 
+                    let user = await usersDAO.getBy({email: username}) 
                     if (!user){
                         return done (null, false)
                     }
@@ -80,24 +79,17 @@ export const initPassport = () => {
         'github',
         new github.Strategy(
             {
-                clientID: process.clientID,
-                clientSecret: process.clientSecret,
+                clientID: 'Iv1.17565cf9e9e26584',
+                clientSecret: 'f8b46dc73d16d58b2ec3b9f5ad0203edfca9040d',
                 callbackURL: 'http://localhost:8080/api/sessions/callbackGithub'
             },
             async (accessToken, refreshToken, profile, done) => {
                 try {
                     let { name: first_name, email } = profile._json
 
-                    // if (!email) {
-                    //     if (profile && profile._json && profile._json.id && profile._json.login) {
-                    //         let email = `${profile._json.id} + ${profile._json.login}@users.noreply.github.com`;
-                    //     } else {
-
-                    //     }
-                    // }
-                        let user = await userManager.getBy({ email })
+                        let user = await usersDAO.getBy({ email })
                         if (!user) {
-                            user = await userManager.create({
+                            user = await usersDAO.create({
                                 first_name, email, profileGithub: profile
                             })
                         }

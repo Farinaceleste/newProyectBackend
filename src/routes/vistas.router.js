@@ -1,21 +1,19 @@
 import { Router } from "express";
-import { ProductManager } from "../dao/ProductMongoDAO.js"
-import { rutaProducts, rutaCarts } from "../utils.js";
-import { CartManager } from "../dao/CartMongoDAO.js";
+import { ProductMongoDAO } from "../dao/ProductMongoDAO.js"
+import { CartMongoDAO } from "../dao/CartMongoDAO.js";
 import { auth } from "../dao/middlewares/auth.js";
-
 
 export const router = Router()
 
-const productmanager = new ProductManager(rutaProducts)
-const cartmanager = new CartManager(rutaCarts)
+const productDAO = new ProductMongoDAO
+const cartDAO = new CartMongoDAO
 
 
 router.get("/", async (req, res) => {
 
     const page = req.query.page || 1;
     const limit = req.query.limit || 2;
-    let products = await productmanager.getProducts(page, limit)
+    let products = await productDAO.getProducts(page, limit)
 
     console.log(JSON.stringify(products, null, 5))
 
@@ -42,7 +40,7 @@ router.get("/", async (req, res) => {
 })
 
 router.get("/realtimeproducts", async (req, res) => {
-    let products = await productmanager.getProducts()
+    let products = await productDAO.getProducts()
     res.setHeader('Content-Type','text/html')
 
     res.status(200).render("realtimeproducts", {
@@ -78,15 +76,13 @@ router.get("/carts/:cid", async (req, res) => {
 
     let { cid} = req.params
 
-    let cart = await cartmanager.getCartsById(cid)
+    let cart = await cartDAO.getCartsById(cid)
   
-
     res.setHeader('Content-Type','text/html')
     res.status(200).render('carts', {cart, login:req.session.user})
 })
 
 router.get("/products", async (req, res) => {
-    
     
     let {pagina, limit}=req.query
 
@@ -104,7 +100,7 @@ router.get("/products", async (req, res) => {
         prevPage, nextPage,
         hasPrevPage, hasNextPage
 
-    } = await productmanager.getProducts()
+    } = await productDAO.getProducts()
 
     console.log(JSON.stringify(products, null, 5))
 

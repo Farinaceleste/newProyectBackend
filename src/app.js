@@ -14,7 +14,7 @@ import { router as vistasRouter } from "./routes/vistas.router.js";
 import { router as sessionsRouter } from './routes/sessions.router.js';
 import cookieParser from "cookie-parser";
 
-const PORT = process.PORT;
+const PORT = 8080;
 
 const app = express()
 app.use(express.json());
@@ -22,11 +22,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser('CoderCoder123'))
 app.use(session(
     {
-        secret: process.secret, 
+        secret: "CoderCoder123", 
         resave: true,
         saveUninitialized:true, 
         store: MongoStore.create({
             mongoUrl: "mongodb+srv://farinaceleste:cele6146@cluster0.nwo2jkx.mongodb.net/ecommerce", 
+            
             ttl:360
         })
     }
@@ -111,7 +112,7 @@ const connect = async () => {
         //console.log('Conectado a Mongosh')
 
         //MONGO ATLAS Base de datos en Atlas
-        await mongoose.connect(process.mongooseConnect)
+        await mongoose.connect("mongodb+srv://farinaceleste:cele6146@cluster0.nwo2jkx.mongodb.net/ecommerce")
         console.log('Conectado a Mongo Atlas')
     }
     catch (error) {

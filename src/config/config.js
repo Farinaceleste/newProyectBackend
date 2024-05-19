@@ -1,14 +1,14 @@
 import dotenv from 'dotenv'; 
 
-
 dotenv.config({
-    path: '/src/.env',
+    path: "./src/.env",
     override:true
 })
 
 export const config = {
-   port : process.env.port || 3000,
-   secret : process.env.secret,
-   clientSecret: process.env.clientSecret,
-   mongooseConnect: process.env.mongooseConnect
+   PORT : process.env.PORT || 8080,
+   PASSWORD : process.env.PASSWORD,
+   CLIENTSECRET: process.env.CLIENTSECRET,
+   MONGOURL: process.env.MONGOURL, 
+   CLIENTID: process.env.CLIENTID
 }

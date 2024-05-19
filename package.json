@@ -16,6 +16,7 @@
     "@sweetalert2/themes": "^5.0.16",
     "bcrypt": "^5.1.1",
     "bootstrap-icons": "^1.11.3",
+    "commander": "^12.1.0",
     "connect-mongo": "^5.1.0",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.4.5",
