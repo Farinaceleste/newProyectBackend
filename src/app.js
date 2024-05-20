@@ -27,7 +27,6 @@ app.use(session(
         saveUninitialized:true, 
         store: MongoStore.create({
             mongoUrl: "mongodb+srv://farinaceleste:cele6146@cluster0.nwo2jkx.mongodb.net/ecommerce", 
-            
             ttl:360
         })
     }

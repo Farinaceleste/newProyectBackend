@@ -11,14 +11,16 @@ export const usersModelo = mongoose.model ('users', new mongoose.Schema({
         }, 
         password: String, 
         age: Number, 
-        role: String
+        role: String, 
+        // cartid: {
+        //     ref: modeloCarts
+        // }
        
         },
         {   
             timestamps: true, strict: false 
         }
    
-
 ))
 
 

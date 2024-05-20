@@ -22,6 +22,16 @@ router.post('/login', passport.authenticate('login', {failureRedirect:'api/sessi
 
 })
 
+router.get('/current', (req, res) => {
+    let user = req.session.user
+    if(user) {
+        res.status(200).json({user, login:req.session.user})
+    } else {
+        res.status(401).json({error: 'No hay usuario logueado'})
+    }
+    
+})
+
 router.get('/logout', (req, res) => {
 
     req.session.destroy(e => {
@@ -62,3 +72,4 @@ router.get('/callbackGithub', passport.authenticate('github', {failureRedirect:'
 router.get('/', UserController.getUsers)
 
 router.post('/', UserController.create)
+

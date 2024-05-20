@@ -6,11 +6,10 @@ const productsSchema = new mongoose.Schema (
     {
         title: String, 
         description: String, 
-        code: Number, 
+        code: {type: String, unique: true}, 
         price: Number, 
         status: Boolean, 
-        thumbnail: String, 
-        id: Number, 
+        thumbnail: String,
         stock: Number
     }, 
     {
