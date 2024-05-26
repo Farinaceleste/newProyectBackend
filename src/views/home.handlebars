@@ -1,9 +1,4 @@
-
-
-
 <h2>¡Bienvenido {{user.first_name}} {{user.last_name}}!</h2>
-
-
 
 <h1>Listado de productos: </h1>
 
@@ -11,15 +6,24 @@
 <hr>
 
 <div class="productList">
-
-    {{#each docs}}
+    <h3 data-cart="{{user.cart}}" id="h3User">Usuario conectado: {{user.email}}</h3>
+    <input type="text" id="cart" value="{{user.cart}}" hidden>
+    
     <ul>
-        <div id="addForm">
-            <li>{{this.title}} - ${{this.price}} - {{this.description}}</li>
-            <button id="add-to-cart-{{this._id}}"type="submit" data-product-id="{{this._id}}">Agregar al carrito</button>
-        </div>
+        {{#each products}}
+            <div class="product-card">
+                <li>
+                    <h2 class="product-name">{{this.title}}</h2>  
+                </li>  
+                <li>
+                    <p class="product-price">${{this.price}} </p>  
+                </li>    
+                <button onclick="addToCart('{{_id}}')" class="add-to-cart">Agregar al carrito</button>
+            </div>
+        {{/each}}
     </ul>
-    {{/each}}
+    
+    <a href="/api/carts/{{user.cart}}">Ver Carrito</a>
 
     <a href="/?page=1">Pág.1</a>
 
@@ -39,5 +43,3 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/js/home.js"></script>
-
-

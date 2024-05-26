@@ -1,10 +1,10 @@
-import { UsuariosMongoDAO as UsersDAO} from "../dao/UserMongoDAO.js";
+import { UsuariosMongoDAO } from "../dao/UserMongoDAO.js";
 
-const usersDAO = new UsersDAO
+const usersDAO = new UsuariosMongoDAO
 
 export default class UserController {
 
-    static getUsers = async (req, res) => {
+    static getAll= async (req, res) => {
 
         let users = usersDAO.getAll()
 
@@ -40,6 +40,25 @@ export default class UserController {
             res.setHeader('Content-Type', 'application/json')
             return res.status(200).json({newUser})
 
+        } catch (error) {
+            console.log(error)
+            res.setHeader('Content-Type', 'application/json')
+            return res.status(500).json({error: 'Error inesperado en el servidor'})
+        }
+    }
+
+    static getBy = async (req, res) => {
+        let {email} = req.params
+            
+        try {
+            existeUser = await usersDAO.getBy({email})
+            if(existeUser) {
+                res.setHeader('Content-Type', 'application/json')
+                return res.status(200).json({existeUser})
+            } else {
+                res.setHeader('Content-Type', 'application/json')
+                return res.status(400).json({error: `No existe usuario con el email ${email}`})
+            }
         } catch (error) {
             console.log(error)
             res.setHeader('Content-Type', 'application/json')

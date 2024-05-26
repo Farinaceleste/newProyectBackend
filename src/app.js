@@ -13,8 +13,10 @@ import passport from "passport";
 import { router as vistasRouter } from "./routes/vistas.router.js";
 import { router as sessionsRouter } from './routes/sessions.router.js';
 import cookieParser from "cookie-parser";
+import { config } from "./config/config.js";
 
 const PORT = 8080;
+console.log(config.general.PORT)
 
 const app = express()
 app.use(express.json());
@@ -22,7 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser('CoderCoder123'))
 app.use(session(
     {
-        secret: "CoderCoder123", 
+        secret: ('CoderCoder123'), 
         resave: true,
         saveUninitialized:true, 
         store: MongoStore.create({
@@ -43,6 +45,7 @@ app.set("views", path.join(__dirname, "views"))
 app.use(express.static(path.join(__dirname, "/public")))
 app.use("/", vistasRouter)
 app.use("/realtimeproducts", vistasRouter)
+app.use('/mockingproducts', vistasRouter)
 
 app.use("/api/products", (req, res, next) => {
     req.io = io;
@@ -67,6 +70,13 @@ app.get("/session", (req, res) => {
     res.setHeader("content-type", "text/plain")
     res.status(200).send(mensaje)
 })
+
+// app.get('/mockingproducts', (req, res) => {
+
+//     const productsFaker = Array.from({ length: 100 }, () => faker.commerce.product());
+//     res.setHeader("content-type", "application/json");
+//     res.status(200).json(productsFaker.join('\n'));
+// })
 
 app.get("*", (req, res) => {
     res.setHeader("content-type", "text/plain")

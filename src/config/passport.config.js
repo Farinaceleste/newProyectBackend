@@ -3,7 +3,6 @@ import local from "passport-local";
 import { UsuariosMongoDAO } from "../dao/UserMongoDAO.js";
 import { creaHash, validaPassword } from "../utils.js";
 import github from "passport-github2";
-import { config } from "./config.js";
 
 let usersDAO = new UsuariosMongoDAO()
 
@@ -24,7 +23,7 @@ export const initPassport = () => {
                         return done(null, false)
                     }
 
-                    let existe = await usersDAO.getBy({ email: username })
+                    let existe = await usersDAO.getOneBy({ email: username })
 
                     if (existe) {
                         return done(null, false)
@@ -57,7 +56,7 @@ export const initPassport = () => {
             },
             async (username, password, done) => {
                 try {
-                    let user = await usersDAO.getBy({email: username}) 
+                    let user = await usersDAO.getOneBy({email: username}) 
                     if (!user){
                         return done (null, false)
                     }
@@ -87,7 +86,7 @@ export const initPassport = () => {
                 try {
                     let { name: first_name, email } = profile._json
 
-                        let user = await usersDAO.getBy({ email })
+                        let user = await usersDAO.getOneBy({ email })
                         if (!user) {
                             user = await usersDAO.create({
                                 first_name, email, profileGithub: profile

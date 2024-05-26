@@ -19,7 +19,6 @@ router.post('/login', passport.authenticate('login', {failureRedirect:'api/sessi
 
     res.setHeader('Content-Type', 'application/json')
     res.status(200).json({ message: 'login correcto', user: req.user })
-
 })
 
 router.get('/current', (req, res) => {
@@ -28,8 +27,7 @@ router.get('/current', (req, res) => {
         res.status(200).json({user, login:req.session.user})
     } else {
         res.status(401).json({error: 'No hay usuario logueado'})
-    }
-    
+    }  
 })
 
 router.get('/logout', (req, res) => {
@@ -61,15 +59,9 @@ router.get('/callbackGithub', passport.authenticate('github', {failureRedirect:'
 
 })
 
-// router.get('/current', (req, res) => {
-
-// req.session.user = req.user
-//     res.setHeader('Content-Type', 'application/json')
-//     res.status(200).json({user: req.user})
-
-// })
-
-router.get('/', UserController.getUsers)
+router.get('/', UserController.getAll)
 
 router.post('/', UserController.create)
+
+router.post('/', UserController.getBy)
 

@@ -1,64 +1,49 @@
-import { modeloProducts } from "./models/products.models.js"
+import { productsModelo } from "./models/products.model.js"
 
 export class ProductMongoDAO {
 
-    async getProducts(page, limit) {
-        //return await modeloProducts.find().lean()
+    // async getProducts(page, limit) {
+    //     // //return await modeloProducts.find().lean()
 
-        const options = {
-            page: page || 1,
-            limit: limit || 2,
-            lean: true
-        };
+    //     // const options = {
+    //     //     page: page || 1,
+    //     //     limit: limit || 2,
+    //     //     lean: true
+    //     // };
 
-        try {
-            const result = await modeloProducts.paginate({}, options);
-            return result;
-        } catch (error) {
-            console.error('Error al obtener los productos:', error);
-            throw error;
-        }
-    }
+    //     // try {
+    //     //     const result = await productsModelo.paginate({}, options);
+    //     //     return result;
+    //     // } catch (error) {
+    //     //     console.error('Error al obtener los productos:', error);
+    //     //     throw error;
+    //     // }
+    // }
 
     async getProductsPaginados(page, limit) {
-
-        const options = {
-            page: page || 1,
-            limit: limit || 2,
-            lean: true
-        };
-
-        try {
-            const result = await modeloProducts.paginate({}, options);
-            return result;
-        } catch (error) {
-            console.error('Error al obtener los productos:', error);
-            throw error;
-        }
+        return await productsModelo.find(page, limit)
     }
 
-    async getProducts () {
-        return await modeloProducts.find().lean()
+    async getAll () {
+        return await productsModelo.find().lean()
     }
 
-    async addProducts(product) {
-        return await modeloProducts.create(product);
+    async getProductBy(filtro={}) {
+        return await productsModelo.findOne(filtro).lean()
     }
 
-    async getProductsById(id) {
-        return await modeloProducts.findById(id).lean()
+    async updateProduct(id, modificacion = {}) {
+        return await productsModelo.findOneAndUpdate({ _id: id }, modificacion).lean()
     }
 
-    async getProductsBy(filtro) {
-        return await modeloProducts.findOne(filtro).lean()
+    async deleteProduct(id) {
+        return await productsModelo.deleteOne({ _id: id }).lean()
     }
 
-    async updateProducts(id, modificacion = {}) {
-        return await modeloProducts.findOneAndUpdate({ _id: id }, modificacion).lean()
-    }
-
-    async deleteProducts(id) {
-        return await modeloProducts.deleteOne({ _id: id }).lean()
+    async createProduct (product) {
+        let resultado = await productsModelo.create(product)
+        console.log(resultado)
+        return resultado.toJSON()
     }
 
 }

@@ -2,47 +2,43 @@ import { Router } from "express";
 import { ProductMongoDAO } from "../dao/ProductMongoDAO.js"
 import { CartMongoDAO } from "../dao/CartMongoDAO.js";
 import { auth } from "../dao/middlewares/auth.js";
+import { fakerES_MX as faker} from "@faker-js/faker"
 
 export const router = Router()
 
 const productDAO = new ProductMongoDAO
 const cartDAO = new CartMongoDAO
 
-
 router.get("/", async (req, res) => {
 
-    const page = req.query.page || 1;
-    const limit = req.query.limit || 2;
-    let products = await productDAO.getProducts(page, limit)
+    let user = {
+        email: 'farinaceleste@gmail.com',
+        cart: '660980854b730e964d61fc98'
+    }
 
-    console.log(JSON.stringify(products, null, 5))
-
-    res.setHeader('Content-Type','text/html')
-
-    let totalPages = products.totalPages;
-    let prevPage = products.prevPage;
-    let nextPage = products.nextPage;
-    let hasPrevPage = products.hasPrevPage;
-    let hasNextPage = products.hasNextPage;
-    let docs = products.docs;
-
-    res.status(200).render("home",{
-        docs,
-        totalPages, 
-        prevPage, nextPage, 
-        hasPrevPage, hasNextPage,
-        login: req.session.user
+    let products = await productDAO.getAll()
+    res.status(200).render("home", {
+        products, user
     })
+})
 
-    // res.status(200).render("home", {
-    //     products
-    // })
+router.get('/mockingproducts', async (req, res) => {
+
+    try {
+        const productsFaker = Array.from({ length: 100 }, () => ({producto : faker.commerce.product()}));
+        console.log(productsFaker);
+        res.render('mockingproducts', { productsFaker });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error en el servidor' })
+    }
 })
 
 router.get("/realtimeproducts", async (req, res) => {
-    let products = await productDAO.getProducts()
-    res.setHeader('Content-Type','text/html')
 
+    let products = await productDAO.getAll()
+
+    res.setHeader('Content-Type', 'text/html')
     res.status(200).render("realtimeproducts", {
         products
     })
@@ -53,64 +49,65 @@ router.get("/chat", async (req, res) => {
     res.status(200).render('chat')
 })
 
-router.get('/login', async(req, res) => {
-    
-    res.status(200).render('login', {login:req.session.user})
+router.get('/login', async (req, res) => {
+
+    res.status(200).render('login', { login: req.session.user })
 })
 
-router.get ('/registro', async(req, res) => {
+router.get('/registro', async (req, res) => {
 
-    let {error, mensaje} = req.query
+    let { error, mensaje } = req.query
 
-    res.status(200).render('registro', {error, mensaje, login:req.session.user})
+    res.status(200).render('registro', { error, mensaje, login: req.session.user })
 })
 
-router.get('/perfil', auth, async(req, res) => {
+router.get('/perfil', auth, async (req, res) => {
 
     let user = req.session.user
 
-    res.status(200).render('perfil', {user, login:req.session.user})
+    res.status(200).render('perfil', { user, login: req.session.user })
 })
 
 router.get("/carts/:cid", async (req, res) => {
 
-    let { cid} = req.params
+    let { cid } = req.params
 
-    let cart = await cartDAO.getCartsById(cid)
-  
-    res.setHeader('Content-Type','text/html')
-    res.status(200).render('carts', {cart, login:req.session.user})
+    let cart = await cartDAO.getCartBy({ cid })
+
+    res.setHeader('Content-Type', 'text/html')
+    res.status(200).render('carts', { cart, login: req.session.user })
 })
 
 router.get("/products", async (req, res) => {
-    
-    let {pagina, limit}=req.query
 
-    if(!pagina) {
+    let { pagina, limit } = req.query
+
+    if (!pagina) {
         pagina = 1
     }
 
-    if(!limit) {
+    if (!limit) {
         limit = 3
     }
 
     let {
-        docs:products,
+        docs: products,
         totalPages,
         prevPage, nextPage,
         hasPrevPage, hasNextPage
 
-    } = await productDAO.getProducts()
+    } = await productDAO.getAll()
 
     console.log(JSON.stringify(products, null, 5))
 
     res.setHeader('Content-Type', 'text/html')
     res.status(200).render("products", {
         products,
-        totalPages, 
-        prevPage, nextPage, 
+        totalPages,
+        prevPage, nextPage,
         hasNextPage, hasPrevPage
-    ,login:req.session.user })
-    
+        , login: req.session.user
+    })
+
 })
 

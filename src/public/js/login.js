@@ -58,7 +58,7 @@ btnSubmit.addEventListener('click', async (e) => {
 linkUsuarios.addEventListener('click', async (e)=>{
     e.preventDefault()
 
-    let respuesta = await fetch ('api/sessions/usuario', {
+    let respuesta = await fetch ('api/sessions/current', {
         method: 'GET', 
         headers: {
             'Content-Type':'application/json'

@@ -1,47 +1,53 @@
-import { modeloCarts } from "./models/carts.models.js"
+import { cartsModelo } from "./models/carts.model.js"
 
 export class CartMongoDAO{
 
-    async getCarts() { 
+    async getAllCarts() { 
 
-        let carritos = await modeloCarts.find().populate("products.product").lean();
-        console.log(JSON.stringify(carritos, null, 2));
-        return carritos
+        return await cartsModelo.find().lean()
+
+
+        // let carritos = await modeloCarts.find().populate("products.product").lean();
+        // console.log(JSON.stringify(carritos, null, 2));
+        // return carritos
     }
 
-    async getCartsById (cid) {
-    try{  
-        let carrito = await modeloCarts.findById(cid).populate("products.product").lean()
-        console.log(carrito)
-        return carrito;
-    } catch  (err){
-        console.log(err);
-      }
+    // async getCartsById (cid) {
+    // try{  
+    //     let carrito = await modeloCarts.findById(cid).populate("products.product").lean()
+    //     console.log(carrito)
+    //     return carrito;
+    // } catch  (err){
+    //     console.log(err);
+    //   }
+    // }
+
+    async getCartBy (filter={}){
+        return await cartsModelo.findOne(filter).lean()
     }
 
-    async updateCarts(id, modificacion={}){  
-        
-        return await modeloCarts.updateOne({_id:id}, modificacion)    
+    async getCartByPopulate(filter={}){
+        return await cartsModelo.findOne(filter).populate('products.product').lean()
     }
     
-    async deleteCarts (id) {
+    async deleteCart (id) {
         
-        return await  modeloCarts.findByIdAndDelete(id).lean()
+        return await  cartsModelo.findByIdAndDelete(id).lean()
     }
 
-    async saveCart (cart) {
-
-        return await modeloCarts.create(cart)
+    async createCart () {
+        let resultado = await cartsModelo.create({products:[]})
+        return resultado.toJSON()
     }
 
-    async findAndUpdate (cid, pid) {
+    async updateCart (cid, pid) {
 
-        return await modeloCarts.findByIdAndUpdate (cid, pid)
+        return await cartsModelo.updateOne(cid, {_id: pid}).lean()
     }
 
     async deleteFromCart(cid, pid) {
 
-        return await modeloCarts.findByIdAndUpdate(cid, { $pull: { products: { _id: pid } } },
+        return await cartsModelo.findByIdAndUpdate(cid, { $pull: { products: { _id: pid } } },
             { new: true })
     }
     

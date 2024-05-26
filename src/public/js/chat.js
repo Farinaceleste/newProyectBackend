@@ -1,4 +1,3 @@
-
 Swal.fire({
     title: "Identifiquese",
     input: "text",

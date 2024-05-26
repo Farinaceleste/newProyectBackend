@@ -14,7 +14,7 @@ const agregar = async (event) => {
   event.preventDefault();
 
   try {
-    const producto = {
+    const product = {
       title: document.getElementById("title").value,
       price: document.getElementById("price").value,
       code: document.getElementById("code").value,
@@ -22,29 +22,27 @@ const agregar = async (event) => {
       description: document.getElementById("description").value,
     };
 
-    console.log({ producto })
+    console.log({ product })
 
-    const respuesta = await fetch(`http://localhost:8080/api/products/`, {
+    const respuesta = await fetch(`/api/products/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(producto),
+      body: JSON.stringify(product),
     });
 
-    console.log({ respuesta })
-
     if (!respuesta.ok) {
-      throw new Error("Error al agregar el producto");
+      throw new Error(errorData.error || "Error al agregar el producto");
+    } else {
+      console.log("Producto agregado correctamente", respuesta)
     }
-
-    console.log("Producto agregado correctamente")
+    
   } catch (err) {
     console.error(err)
     alert("Ha ocurrido un error al agregar el producto");
   }
 }
-
 
 socket.on("deleteProduct",  async datos => {
   let ulProductos = document.getElementById("ulproducts")
