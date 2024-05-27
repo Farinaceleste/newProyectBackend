@@ -1,3 +1,5 @@
+import os from "os"
+
 export function argsUser (user) {
     let {first_name, last_name, age, email, password} = user
 
@@ -10,10 +12,10 @@ export function argsUser (user) {
     - Email: Tipo String. Se ingresó ${email}
     - password: Tipo String. Se ingresó ${password}
     
-    Fecha: ${newDate().toString()}
-    
+    Fecha: ${new Date().toUTCString()}
+    Usuario: ${os.userInfo().username}
+    Terminal: ${os.hostname()}
     ` 
     
-    
-    
+
 }

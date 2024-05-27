@@ -14,6 +14,8 @@ import { router as vistasRouter } from "./routes/vistas.router.js";
 import { router as sessionsRouter } from './routes/sessions.router.js';
 import cookieParser from "cookie-parser";
 import { config } from "./config/config.js";
+import { handleError } from "./dao/middlewares/handleError.js";
+import CustomError from "./errors/CustomError.js";
 
 const PORT = 8080;
 console.log(config.general.PORT)
@@ -69,6 +71,22 @@ app.get("/session", (req, res) => {
     
     res.setHeader("content-type", "text/plain")
     res.status(200).send(mensaje)
+})
+
+app.use(handleError)
+
+app.get('/error', (req, res) => {
+
+    throw new Error('Error de prueba numero1')
+
+    res.setHeader("Content-Type", "text/plain")
+    res.status(200).send('ok')
+    
+})
+
+app.get('/error2', (req, res) => {
+
+    CustomError.createError({name: 'Error de prueba numero2', cause: 'Estamos probando errores'})
 })
 
 // app.get('/mockingproducts', (req, res) => {

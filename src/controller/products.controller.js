@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
 import { ProductMongoDAO as ProductsDAO } from "../dao/ProductMongoDAO.js";
+import CustomError from "../errors/CustomError.js";
+import { argsProducts } from "../errors/productError.js";
+import { ERRORES } from "../errors/errors.js";
 
 const productsDAO = new ProductsDAO
 
@@ -120,11 +123,13 @@ export default class ProductsController {
 
     static createProduct = async (req, res) => {
         let { title, price, description, code, stock } = req.body;
-        console.log('Received product:', { title, price, description, code, thumbnail, stock })
+        console.log('Received product:', { title, price, description, code, stock })
 
         if (!title || !price || !description || !code || !stock) {
-            res.setHeader('Content-Type', 'application/json');
-            return res.status(400).json({ error: "Complete los campos faltantes" })
+            // res.setHeader('Content-Type', 'application/json');
+            // return res.status(400).json({ error: "Complete los campos faltantes" })
+
+            CustomError.createError({name: 'Error al crear el producto', cause: argsProducts(req.body), message: 'Complete la propiedad que falta', code:ERRORES["argumentos inválidos"]})
         }
 
         try {
