@@ -1,4 +1,6 @@
 import { UsuariosMongoDAO } from "../dao/UserMongoDAO.js";
+import { ERRORES } from "../errors/errors.js";
+import { argsUser } from "../errors/userError.js";
 
 const usersDAO = new UsuariosMongoDAO
 
@@ -16,8 +18,9 @@ export default class UserController {
         let {nombre, email} = req.body
 
         if(!email) {
-            res.setHeader('Content-Type', 'application/json')
-            return res.status(400).json({error: 'email requerido'})
+            // res.setHeader('Content-Type', 'application/json')
+            // return res.status(400).json({error: 'email requerido'})
+            CustomError.createError({name: 'Falta completar campos', cause: argsUser(req.body), message: 'Falta completar campos', code: ERRORES['argumentos inválidos']})
         }
 
         let existe 
@@ -26,8 +29,9 @@ export default class UserController {
             existe = await usersDAO.getBy({email})
         } catch (error) {
             console.log(error)
-            res.setHeader('Content-Type', 'application/json')
-            return res.status(500).json({error: 'Error inesperado en el servidor'})
+            // res.setHeader('Content-Type', 'application/json')
+            // return res.status(500).json({error: 'Error inesperado en el servidor'})
+            CustomError.createError({name: 'Error interno del servidor', cause: argsProducts(req.body), message: 'Error interno del servidor', code: ERRORES['error interno del servidor']})
         }
 
         if (existe) {
@@ -42,8 +46,9 @@ export default class UserController {
 
         } catch (error) {
             console.log(error)
-            res.setHeader('Content-Type', 'application/json')
-            return res.status(500).json({error: 'Error inesperado en el servidor'})
+            // res.setHeader('Content-Type', 'application/json')
+            // return res.status(500).json({error: 'Error inesperado en el servidor'})
+            CustomError.createError({name: 'Error interno del servidor', cause: argsProducts(req.body), message: 'Error interno del servidor', code: ERRORES['error interno del servidor']})
         }
     }
 
@@ -61,10 +66,9 @@ export default class UserController {
             }
         } catch (error) {
             console.log(error)
-            res.setHeader('Content-Type', 'application/json')
-            return res.status(500).json({error: 'Error inesperado en el servidor'})
+            // res.setHeader('Content-Type', 'application/json')
+            // return res.status(500).json({error: 'Error inesperado en el servidor'})
+            CustomError.createError({name: 'Error interno del servidor', cause: argsProducts(req.body), message: 'Error interno del servidor', code: ERRORES['error interno del servidor']})
         }
     }
-
-
 }

@@ -13,7 +13,6 @@ export function argsProducts (product) {
     - Price: Tipo Number. Se ingresó ${price}
     - Stock: Tipo Number. Se ingresó ${stock}
     
-    
     Fecha: ${new Date().toUTCString()}
     Usuario: ${os.userInfo().username}
     Terminal: ${os.hostname()}

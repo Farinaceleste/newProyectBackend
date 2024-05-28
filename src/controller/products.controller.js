@@ -21,8 +21,9 @@ export default class ProductsController {
             res.setHeader("Content-Type", "application/json")
             res.status(200).json({ products })
           } catch (error) {
-            res.setHeader("Content-Type", "application/json")
-            return res.status(500).json({ error: "Error inesperado en el servidor" })
+            // res.setHeader("Content-Type", "application/json")
+            // return res.status(500).json({ error: "Error inesperado en el servidor" })
+            CustomError.createError({name: 'Error al crear el producto', cause: argsProducts(req.body), message: 'Error al crear el producto', code: ERRORES['bad request']})
           }
 
         res.setHeader('Content-Type', 'application/json')
@@ -50,8 +51,9 @@ export default class ProductsController {
             }
 
         } catch (error) {
-            res.setHeader("Content-Type", "application/json")
-            return res.status(500).json({ error: 'Error en el servidor' });
+            // res.setHeader("Content-Type", "application/json")
+            // return res.status(500).json({ error: 'Error en el servidor' });
+            CustomError.createError({name: 'Error interno del servidor', cause: argsProducts(req.body), message: 'Error interno del servidor', code: ERRORES['error interno del servidor']})
         }
     }
 
@@ -90,8 +92,9 @@ export default class ProductsController {
 
         } catch (error) {
             console.error(error)
-            res.setHeader('Content-Type', 'application/json')
-            return res.status(500).json({ error: "Error inesperado en el servidor" })
+            // res.setHeader('Content-Type', 'application/json')
+            // return res.status(500).json({ error: "Error inesperado en el servidor" })
+            CustomError.createError({name: 'Error al crear el producto', cause: argsProducts(req.body), message: 'Error al crear el producto', code: ERRORES['bad request']})
         }
 
     }
@@ -116,8 +119,9 @@ export default class ProductsController {
             }
 
         } catch (error) {
-            res.setHeader('Content-Type', 'application/json')
-            return res.status(500).json({ error: "Error inesperado en el servidor" })
+            // res.setHeader('Content-Type', 'application/json')
+            // return res.status(500).json({ error: "Error inesperado en el servidor" })
+            CustomError.createError({name: 'Error al crear el producto', cause: argsProducts(req.body), message: 'Error al crear el producto', code: ERRORES['bad request']})
         }
     }
 
@@ -140,8 +144,9 @@ export default class ProductsController {
 
         } catch (error) {
             console.error('Error adding product:', error);
-            res.setHeader('Content-Type', 'application/json');
-            return res.status(500).json({ error: "Error al agregar el producto" });
+            // res.setHeader('Content-Type', 'application/json');
+            // return res.status(500).json({ error: "Error al agregar el producto" });
+            CustomError.createError({name: 'Error al crear el producto', cause: argsProducts(req.body), message: 'Error al crear el producto', code: ERRORES['bad request']})
         }
     }
 

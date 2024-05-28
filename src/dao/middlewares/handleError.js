@@ -14,7 +14,19 @@ export const handleError = (error, req, res, next) => {
         case ERRORES['Not Found']:
             res.setHeader('Content-Type', 'application-json');
             return res.status(ERRORES['Not Found']).json({ error: 'Recurso no encontrado' })
+        
+        case ERRORES['Sin autorización']:
+            res.setHeader('Content-Type', 'application-json');
+            return res.status(ERRORES['Sin autorización']).json({ error: 'No posee la autorizacion para acceder al recurso' })
 
+        case ERRORES['Bad Request']:
+            res.setHeader('Content-Type', 'application-json');
+            return res.status(ERRORES['Bad Request']).json({ error: 'El servidor no pudo procesar la request' })
+
+        case ERRORES['Bad Gateway']:
+            res.setHeader('Content-Type', 'application-json');
+            return res.status(ERRORES['Bad Gateway']).json({ error: 'El servidor recibió una respuesta inválida' })    
+        
         default:
             res.setHeader('Content-Type', 'application-json');
             return res.status(500).json(
