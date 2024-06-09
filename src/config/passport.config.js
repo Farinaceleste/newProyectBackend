@@ -1,8 +1,10 @@
 import passport from "passport";
 import local from "passport-local";
 import { UsuariosMongoDAO } from "../dao/UserMongoDAO.js";
-import { creaHash, validaPassword } from "../utils.js";
+import { SECRET, creaHash, validaPassword } from "../utils.js";
 import github from "passport-github2";
+import  passportjwt  from "jsonwebtoken";
+
 
 let usersDAO = new UsuariosMongoDAO()
 
@@ -100,6 +102,29 @@ export const initPassport = () => {
                 }
         )
     )
+
+    // passport.use(
+    //     'jwb',
+    //     new passportjwt.Strategy(
+    //         {
+    //             secretOrKey: SECRET,
+    //             jwtFromRequest: new passportjwt.ExtractJwt.fromExtractors([buscaToken])
+    //         },
+    //         async (contenidoToken, done) => {
+    //             try {
+    //                 console.log('passport')
+                    
+    //                 if (contenidoToken === 'Maria'){
+    //                     return done (null, false, {message:'El usuario tiene permisos para acceder'})
+    //                 }
+
+    //                 return done (null, contenidoToken)
+    //             } catch (error) {
+    //                 return done(error)
+    //             }
+    //         }
+    //     )
+    // )
 
     passport.serializeUser((user, done) => {
         return done(null, user)

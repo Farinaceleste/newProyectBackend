@@ -36,6 +36,11 @@ const agregar = async (event) => {
       throw new Error(errorData.error || "Error al agregar el producto");
     } else {
       console.log("Producto agregado correctamente", respuesta)
+      swal.fire({
+        title: "Producto agregado correctamente",
+        type: "success",
+        confirmButtonText: "Ok"
+      });
     }
     
   } catch (err) {
@@ -80,3 +85,5 @@ async function borrar(idProd) {
   }
  
 }
+
+

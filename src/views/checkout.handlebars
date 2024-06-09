@@ -1,0 +1,27 @@
+{{>menu}}
+<h1>Mi carrito</h1>
+<a href="/">Volver</a>
+<input id="cartId" type="text" hidden value="{{cart.user}}">
+
+
+<ul id="cartItems">
+    {{#each cart.products}}
+
+      <li class="cart-item">
+        <div class="product-info">
+          <h3>{{this.products.title}}</h3>
+          <p>Cantidad: {{this.products.quantity}}</p>
+          <p>Precio total: {{this.products.price}}</p>
+        </div>
+        <button class="delete-btn" data-product-id="{{this.products._id}}">Eliminar</button>
+      </li>
+    </div>
+</ul>
+
+{{/each}}
+
+<a href="/">Finalizar compra</a>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/cart.js"></script>

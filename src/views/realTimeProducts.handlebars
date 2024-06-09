@@ -1,7 +1,9 @@
+{{>menu}}
+
 <h1>Agregar/borrar productos</h1>
 <hr>
 <a href="/">Volver</a>
-<hr>
+
 
 <div class="realtime">
     <ul id="ulproducts">
@@ -9,23 +11,36 @@
         <li id="producto-{{id}}">{{title}} - ${{price}} - {{id}}</li>
         {{/each}}
     </ul>
-
-    <form method="post" id="agregarForm" action="http://localhost:8080/api/products/"></form>
-    <input type="text" placeholder="Ingrese el titulo" id="title" name="title" required />
-    <input type="number" placeholder="Ingrese el precio" id="price" name="price" required>
-    <input type="number" placeholder="Ingrese código" id="code" name="code" required>
-    <input type="number" placeholder="Ingrese stock" id="stock" name="stock" required>
-    <input placeholder="Agregue una descripción" id="description" name="description" required></input>
-    <div class="botones-product">
-        <button type="submit" onclick="agregar(event)">Nuevo producto</button>
-    </div>
-    </form>
-
-    <form method="delete" id="deleteForm" action="http://localhost:8080/api/products/{{_id}}"></form>
-    <input type="number" placeholder="Ingrese id" name="idProd" id="idProd" required />
-    <button type="submit" onclick="borrar(document.getElementById('idProd').value)">Borrar producto</button>
 </div>
+<form method="post" id="agregarForm" action="http://localhost:8080/api/products/">
+    <h2>Agregar producto nuevo</h2>
+    <label for="title">Título:</label>
+    <input type="text" id="title" name="title" required>
+    <br><br>
+    <label for="description">Descripción:</label>
+    <textarea id="description" name="description" required></textarea>
+    <br><br>
+    <label for="code">Código:</label>
+    <input type="text" id="code" name="code" required>
+    <br><br>
+    <label for="stock">Stock:</label>
+    <input type="number" id="stock" name="stock" required>
+    <br><br>
+    <label for="price">Precio:</label>
+    <input type="number" id="price" name="price" required>
+    <br><br>
+    <button type="submit" onclick="agregar(event)">Nuevo producto</button>
+</form>
 
+
+<form method="delete" id="deleteForm" action="http://localhost:8080/api/products/{{_id}}">
+    <h2>Eliminar producto</h2>
+    <label for="productId">ID del producto:</label>
+    <input type="text" id="idProd" name="idProd" required>
+    <br><br>
+    <button type="submit" onclick="borrar(document.getElementById('idProd').value)">Borrar producto</button>
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/realTimeProducts.js"></script>
-

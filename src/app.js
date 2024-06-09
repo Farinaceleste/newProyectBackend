@@ -1,6 +1,6 @@
 import path from "path";
 import express from "express";
-import __dirname from "./utils.js";
+import __dirname, { logger, middLogg } from "./utils.js";
 import { engine } from "express-handlebars";
 import { Server } from "socket.io";
 import { router as CartRouter } from "./routes/cart.router.js";
@@ -17,8 +17,9 @@ import { config } from "./config/config.js";
 import { handleError } from "./dao/middlewares/handleError.js";
 import CustomError from "./errors/CustomError.js";
 
-const PORT = 8080;
-console.log(config.general.PORT)
+const PORT =config.general.PORT
+console.log(PORT)
+
 
 const app = express()
 app.use(express.json());
@@ -36,10 +37,14 @@ app.use(session(
     }
 ))
 
+app.use('/entorno', (req, res) => {
+    console.log(config)
+})
+
 initPassport()
 app.use(passport.initialize())
 //app.use(passport.session())
-
+app.use(middLogg)
 app.engine("handlebars", engine())
 app.set("view engine", "handlebars")
 app.set("views", path.join(__dirname, "views"))
@@ -102,7 +107,8 @@ app.get("*", (req, res) => {
 })
 
 const server = app.listen(PORT, () => {
-    console.log(`Server escuchando en puerto ${PORT}`)
+    // console.log(`Server escuchando en puerto ${PORT}`)
+    logger.info(`Server escuchando en puerto ${PORT}`)
 });
 
 let mensajes = []

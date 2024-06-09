@@ -1,43 +1,40 @@
-<h2>¡Bienvenido {{user.first_name}} {{user.last_name}}!</h2>
-
-<h1>Listado de productos: </h1>
-
 {{>menu}}
 <hr>
 
+
+<h2>¡Bienvenido {{user.first_name}} {{user.last_name}}!</h2>
+<h3 data-cart="{{user.cart}}" id="h3User">Usuario conectado: {{user.email}}</h3>
+<input type="text" id="cart" value="{{user.cart}}" hidden>
 <div class="productList">
-    <h3 data-cart="{{user.cart}}" id="h3User">Usuario conectado: {{user.email}}</h3>
-    <input type="text" id="cart" value="{{user.cart}}" hidden>
-    
-    <ul>
+    <ul class="container-cards">
         {{#each products}}
-            <div class="product-card">
-                <li>
-                    <h2 class="product-name">{{this.title}}</h2>  
-                </li>  
-                <li>
-                    <p class="product-price">${{this.price}} </p>  
-                </li>    
-                <button onclick="addToCart('{{_id}}')" class="add-to-cart">Agregar al carrito</button>
-            </div>
+        <div class="product-card">
+            <li>
+                <h2 class="product-name">{{this.title}}</h2>
+            </li>
+            <li>
+                <p class="product-price">${{this.price}} </p>
+            </li>
+            <button onclick="addToCart('{{_id}}')" class="add-to-cart">Agregar al carrito</button>
+        </div>
         {{/each}}
     </ul>
-    
-    <a href="/api/carts/{{user.cart}}">Ver Carrito</a>
+</div>
+<a href="http://localhost:8080/checkout">Ver Carrito</a>
 
-    <a href="/?page=1">Pág.1</a>
+<a href="/?page=1">Pág.1</a>
 
-    {{#if hasPrevPage}}
-    <a href="/?page={{prevPage}}">Pág.Anterior</a>
-    {{/if}}
+{{#if hasPrevPage}}
+<a href="/?page={{prevPage}}">Pág.Anterior</a>
+{{/if}}
 
-    {{#if hasNextPage}}
-    <a href="/?page={{nextPage}}">Pág.Siguiente</a>
-    {{/if}}
+{{#if hasNextPage}}
+<a href="/?page={{nextPage}}">Pág.Siguiente</a>
+{{/if}}
 
-    {{#if hasNextPage}}
-    <a href="/?page={{totalPages}}">Ult.página</a>
-    {{/if}}
+{{#if hasNextPage}}
+<a href="/?page={{totalPages}}">Ult.página</a>
+{{/if}}
 </div>
 
 

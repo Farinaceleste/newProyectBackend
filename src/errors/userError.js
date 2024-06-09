@@ -16,6 +16,4 @@ export function argsUser (user) {
     Usuario: ${os.userInfo().username}
     Terminal: ${os.hostname()}
     ` 
-    
-
 }

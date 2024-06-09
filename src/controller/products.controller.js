@@ -33,6 +33,7 @@ export default class ProductsController {
     static deleteProducts = async (req, res) => {
 
         let { id } = req.params
+
         if (!mongoose.Types.ObjectId.isValid(id)) {
             res.setHeader("Content-Type", "application/json")
             res.status(400).json({ error: "id inválido" });

@@ -26,7 +26,6 @@ const deleteToCart = async(cid, pid) => {
             
         } else {
             console.log("Producto borrado correctamente")
-           
         }
 
     } catch (err) {

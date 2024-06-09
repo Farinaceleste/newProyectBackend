@@ -1,13 +1,23 @@
-<h1>Chat</h1>
-
-<hr>
-
 {{>menu}}
-<a href="/">Volver</a>
-
-<input type="text" id="mensaje" placeholder="Escribe tu mensaje..."><br><br>
-<div id="mensajes"></div>
+<br>
+<h1>Chat</h1>
 <hr>
+<br>
+
+<a href="/">Volver</a>
+{{!-- <br>
+<br>
+<label for="mensaje">Mensaje</label>
+<input type="text" id="mensaje" placeholder="Escribiendo..."><br><br>
+<div id="mensajes"></div>
+<hr> --}}
+
+<div class="chat-input-container">
+  <label for="message" class="chat-label">Escribe un mensaje...</label>
+  <input type="text" id="mensaje" class="chat-input" placeholder="Escribe un mensaje...">
+  <div id="mensajes"></div>
+  <button class="chat-send-btn">Enviar</button>
+</div>
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

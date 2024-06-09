@@ -1,20 +1,21 @@
-import dotenv from 'dotenv';
+import dotenv from "dotenv"
 
 dotenv.config({
-    path: "./src/.env",
+    path: "/.env",
     override: true
 })
 
 export const config = {
     general: {
-        PASSWORD: process.env.PASSWORD,
-        PORT: process.env.PORT || 3000,
+        PASSWORD:process.env.PASSWORD,
+        PORT:process.env.PORT||3000,
+        MODE:process.env.MODE||"development"
     },
     db: {
-        MONGOURL: process.env.MONGOURL,
+        MONGOURL:process.env.MONGOURL
     },
     auth: {
-        CLIENTSECRET: process.env.CLIENTSECRET,
-        CLIENTID: process.env.CLIENTID
+        CLIENTSECRET:process.env.CLIENTSECRET,
+        CLIENTID:process.env.CLIENTID
     }
 }

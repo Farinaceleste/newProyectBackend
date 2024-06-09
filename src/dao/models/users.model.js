@@ -11,6 +11,12 @@ export const usersModelo = mongoose.model(
                 type: String, unique: true
             }, 
             password: String, 
+            rol: {
+                type: String, 
+                default: 'user',
+                type: mongoose.Types.ObjectId,
+                ref: 'roles'
+            },
             cart: {
                 type:mongoose.Types.ObjectId, ref:'carts'
             }

@@ -1,8 +1,9 @@
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import crypto from "crypto";
 import bcrypt from "bcrypt";
 import passport from 'passport';
+import winston from 'winston';
+import { config } from './config/config.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -28,8 +29,64 @@ export const passportCall = (estrategia) => {
                     detalle: info.detalle ? info.detalle : '-',
                 })
             }
-            req.user=user
+            req.user = user
             next()
         })(req, res, next)
     }
 }
+
+const customLevels={
+    fatal:0,
+    error:1,
+    warning:2,
+    info:3,
+    http:4,
+    debug:5
+}
+
+export const logger = winston.createLogger(
+    {
+        levels: customLevels,
+        transports: [
+            new winston.transports.File(
+                {
+                    level: "grave",
+                    filename: "./logs/error.log",
+                    format: winston.format.combine(
+                        winston.format.timestamp(),
+                        winston.format.colorize({
+                            colors:{fatal:"red", error:"orange", info:"blue", leve:"green"}
+                        }),
+                        winston.format.json()
+                    )
+
+                }
+            )
+        ]
+    }
+)
+
+
+
+const transportConsola = new winston.transports.Console(
+    {
+        level: "leve",
+        format: winston.format.combine(
+            winston.format.timestamp(),
+            winston.format.colorize({
+                colors:{grave:"red", medio:"yellow", info:"blue", leve:"green"}
+            }),
+            winston.format.simple()
+        )
+    }
+)
+
+if(config.general.MODE != "production") {
+    logger.add(transportConsola)
+}
+
+export const middLogg = (req, res, next) => {
+    req.logger=logger
+    next()
+}
+ 

@@ -66,6 +66,14 @@ const addToCart = async (pid) => {
 
         if (!respuesta.ok) {
             throw new Error(`Error: ${respuesta.statusText}`);
+        } else {
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Your work has been saved",
+                showConfirmButton: false,
+                timer: 1500
+            });
         }
 
         let datos = await respuesta.json();

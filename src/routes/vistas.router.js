@@ -11,11 +11,9 @@ const cartDAO = new CartMongoDAO
 
 router.get("/", async (req, res) => {
 
-    let user = {
-        email: 'farinaceleste@gmail.com',
-        cart: '660980854b730e964d61fc98'
-    }
-
+    let user = req.session.user
+        
+    
     let products = await productDAO.getAll()
     res.status(200).render("home", {
         products, user
@@ -34,8 +32,20 @@ router.get('/mockingproducts', async (req, res) => {
     }
 })
 
-router.get("/realtimeproducts", async (req, res) => {
+router.get('/loggerTest', (req, res) => {
 
+    req.logger.fatal('Prueba de log FATAL')
+    req.logger.error('Prueba de log ERROR')
+    req.logger.warning('Prueba de log WARNING')    
+    req.logger.info('Prueba de log INFO')
+    req.logger.http('Prueba de log HTTP')
+    req.logger.debug('Prueba de log DEBUG')
+
+    res.status(200).render('home')
+})
+
+router.get("/realtimeproducts",async (req, res) => {
+// , auth(['admin'])
     let products = await productDAO.getAll()
 
     res.setHeader('Content-Type', 'text/html')
@@ -68,17 +78,17 @@ router.get('/perfil', auth, async (req, res) => {
     res.status(200).render('perfil', { user, login: req.session.user })
 })
 
-router.get("/carts/:cid", async (req, res) => {
+router.get("/checkout", async (req, res) => {
 
     let { cid } = req.params
 
     let cart = await cartDAO.getCartBy({ cid })
 
     res.setHeader('Content-Type', 'text/html')
-    res.status(200).render('carts', { cart, login: req.session.user })
+    res.status(200).render('checkout', { cart, login: req.session.user })
 })
 
-router.get("/products", async (req, res) => {
+router.get("/products", auth(['public']),async (req, res) => {
 
     let { pagina, limit } = req.query
 

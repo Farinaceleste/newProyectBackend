@@ -9,7 +9,7 @@ export default class CartController {
 
     static getCart = async (req, res) => {
         try {
-            let carts = await cartsDAO.getCarts()
+            let carts = await cartsDAO.getAllCarts()
 
             res.setHeader("Content-Type", "application/json")
             res.status(200).json({ carts })
@@ -21,7 +21,7 @@ export default class CartController {
     }
 
     static getCartBy = async (req, res) => {
-        
+
         let { cid } = req.params
 
         if (!isValidObjectId(cid)) {
@@ -30,7 +30,7 @@ export default class CartController {
         }
 
         try {
-            const cartById = await cartsDAO.getCartByPopulate({_id:cid});
+            const cartById = await cartsDAO.getCartByPopulate({ _id: cid });
 
             if (cartById) {
                 res.setHeader('Content-Type', 'application/json')
@@ -72,7 +72,7 @@ export default class CartController {
         }
 
         try {
-            let resultado = await cartsDAO.deleteCarts(cid)
+            let resultado = await cartsDAO.deleteCart(cid)
             if (resultado.deletedCount > 0) {
                 res.setHeader('Content-Type', 'application/json')
                 res.status(200).json({
@@ -91,127 +91,118 @@ export default class CartController {
     }
 
     static deleteFromCart = async (req, res) => {
-        const { cid, pid } = req.params
 
-        if (!mongoose.Types.ObjectId.isValid(cid) || !mongoose.Types.ObjectId.isValid(pid)) {
-            res.setHeader("Content-Type", "application/json")
-            return res.status(400).json({ error: "id inválido" });
-        }
-
+        const { cid, pid } = req.params;
         try {
-            const updatedCart = await cartsDAO.deleteFromCart(cid, pid);
-            if (!updatedCart) {
-                res.header('Content-Type', 'application/json')
-                return res.status(400).json({ error: "Carrito no encontrado" })
-            }
-
-            res.header('Content-Type', 'application/json')
-            return res.status(200).json({ message: "Producto eliminado", cart: updatedCart })
+            const updatedCart = await CartService.deleteFromCart(cid, pid);
+            res.header('Content-Type', 'application/json');
+            return res.status(200).json({ message: "Producto eliminado", cart: updatedCart });
         } catch (error) {
-            res.header('Content-Type', 'application/json')
-            return res.status(500).json({ error: "Error en el servidor" })
+            res.header('Content-Type', 'application/json');
+            return res.status(500).json({ error: "Error en el servidor" });
         }
     }
+
 
     static updateCart = async (req, res) => {
-        let { cid, pid } = req.params;
+    let { cid, pid } = req.params;
 
-        if (!cid || !pid) {
+    if (!cid || !pid) {
+        res.setHeader("Content-Type", "application/json")
+        return res.status(400).json({ error: "faltó ingresar cart o producto" });
+    }
+
+    if (!isValidObjectId(cid) || !isValidObjectId(pid)) {
+        res.setHeader("Content-Type", "application/json")
+        return res.status(400).json({ error: "Error en formato cart o producto" });
+    }
+
+    let cart = await cartsDAO.getCartBy({ _id: cid })
+    if (!cart) {
+        res.setHeader("Content-Type", "application/json")
+        return res.status(400).json({ error: `carrito inexistente ${cart}` });
+    }
+
+    let product = await productsDAO.getProductBy({ _id: pid })
+    if (!product) {
+        res.setHeader("Content-Type", "application/json")
+        return res.status(400).json({ error: `producto inexistente: ${pid}` });
+    }
+
+    let indProducto = cart.products.findIndex(p => p.product == pid)
+    if (indProducto == -1) {
+        cart.products.push({
+            product: pid, cantidad: 1
+        })
+    } else {
+        cart.products[indProducto].cantidad += 1
+    }
+
+    try {
+        let resultado = await cartsDAO.updateCart({ cid, cart })
+        if (resultado.modifiedCount > 0) {
             res.setHeader("Content-Type", "application/json")
-            return res.status(400).json({ error: "faltó ingresar cart o producto" });
-        }
-
-        if (!isValidObjectId(cid) || !isValidObjectId(pid)) {
-            res.setHeader("Content-Type", "application/json")
-            return res.status(400).json({ error: "Error en formato cart o producto" });
-        }
-
-        let cart = await cartsDAO.getCartBy({ _id: cid })
-        if (!cart) {
-            res.setHeader("Content-Type", "application/json")
-            return res.status(400).json({ error: `carrito inexistente ${cart}` });
-        }
-
-        let product = await productsDAO.getProductBy({ _id: pid })
-        if (!product) {
-            res.setHeader("Content-Type", "application/json")
-            return res.status(400).json({ error: `producto inexistente: ${pid}` });
-        }
-
-        let indProducto = cart.products.findIndex(p => p.product == pid)
-        if (indProducto == -1) {
-            cart.products.push({
-                product: pid, cantidad: 1
-            })
+            return res.status(200).json({ payload: 'cart actualizado' });
         } else {
-            cart.products[indProducto].cantidad += 1
+            res.setHeader("Content-Type", "application/json")
+            return res.status(500).json({
+                error: `Error inesperado en el servidor`,
+            })
         }
-
-        try {
-            let resultado = await cartsDAO.updateCart({ cid, cart })
-            if (resultado.modifiedCount > 0) {
-                res.setHeader("Content-Type", "application/json")
-                return res.status(200).json({ payload: 'cart actualizado' });
-            } else {
-                res.setHeader("Content-Type", "application/json")
-                return res.status(500).json({
-                    error: `Error inesperado en el servidor`,
-                })
-            }
-        } catch (error) {
-            console.log(error);
-            res.setHeader('Content-Type', 'application/json');
-            return res.status(500).json(
-                {
-                    error: `Contacte al administrador, 
+    } catch (error) {
+        console.log(error);
+        res.setHeader('Content-Type', 'application/json');
+        return res.status(500).json(
+            {
+                error: `Contacte al administrador, 
                     detalle: ${error.message}`
-                }
-            )
-        }
+            }
+        )
     }
+}
     static addProdToExistCart = async (req, res) => {
-        try {
+    try {
 
-            const carts = await cartmanager.getCarts()
-            const cartId = req.params.cid.toString();
-            const prodById = req.params.pid.toString()
+        const carts = await cartmanager.getCarts()
+        const cartId = req.params.cid.toString();
+        const prodById = req.params.pid.toString()
 
-            if (!mongoose.Types.ObjectId.isValid(cartId)) {
-                res.setHeader('Content-Type', 'application/json')
-                return res.status(400).json({ error: "ID de carrito inválido" })
-            }
-
-            if (!Number.isInteger(prodById)) {
-                return res.status(400).json({ error: "ID de carrito inválido" })
-            }
-
-            const cart = carts.find(c => c.id === cartId)
-
-            if (!cart) {
-                return res.status(400).json({ error: "Carrito no encontrado" })
-            }
-
-            const productAdd = await productsDAO.getProductsById(prodById)
-
-            if (!productAdd) {
-                return res.status(400).json({ error: "Carrito no encontrado" })
-            }
-
-            const existingProduct = cart.products.find(p => p.id === prodById)
-
-            if (existingProduct) {
-                existingProduct.quantity++
-            } else {
-                cart.products.push({ id: prodById, quantity: 1 })
-            }
-
-            await cartsDAO.saveCart(carts)
-            res.status(200).json({ cart })
-
-        } catch (error) {
-            console.error("Error al procesar la solicitud", error)
-            res.status(500).json({ error: "Error en el servidor" })
-
+        if (!mongoose.Types.ObjectId.isValid(cartId)) {
+            res.setHeader('Content-Type', 'application/json')
+            return res.status(400).json({ error: "ID de carrito inválido" })
         }
+
+        if (!Number.isInteger(prodById)) {
+            return res.status(400).json({ error: "ID de carrito inválido" })
+        }
+
+        const cart = carts.find(c => c.id === cartId)
+
+        if (!cart) {
+            return res.status(400).json({ error: "Carrito no encontrado" })
+        }
+
+        const productAdd = await productsDAO.getProductBy(prodById)
+
+        if (!productAdd) {
+            return res.status(400).json({ error: "Carrito no encontrado" })
+        }
+
+        const existingProduct = cart.products.find(p => p.id === prodById)
+
+        if (existingProduct) {
+            existingProduct.quantity++
+        } else {
+            cart.products.push({ id: prodById, quantity: 1 })
+        }
+
+        await cartsDAO.saveCart(carts)
+        res.status(200).json({ cart })
+
+    } catch (error) {
+        console.error("Error al procesar la solicitud", error)
+        res.status(500).json({ error: "Error en el servidor" })
+
     }
+}
 }
