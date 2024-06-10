@@ -5,7 +5,6 @@ export const handleError = (error, req, res, next) => {
     console.log(`${error.cause ? error.cause : error.stack}`)
     console.log('first')
     
-
     switch (error.code) {
         case ERRORES['argumentos inválidos']:
             res.setHeader('Content-Type', 'application/json');

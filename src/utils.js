@@ -50,8 +50,8 @@ export const logger = winston.createLogger(
         transports: [
             new winston.transports.File(
                 {
-                    level: "grave",
-                    filename: "./logs/error.log",
+                    level: "info",
+                    filename: "./logs/errors.log",
                     format: winston.format.combine(
                         winston.format.timestamp(),
                         winston.format.colorize({
@@ -66,11 +66,9 @@ export const logger = winston.createLogger(
     }
 )
 
-
-
 const transportConsola = new winston.transports.Console(
     {
-        level: "leve",
+        level: "debug",
         format: winston.format.combine(
             winston.format.timestamp(),
             winston.format.colorize({

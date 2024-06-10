@@ -2,7 +2,8 @@ import { Router } from "express";
 import { ProductMongoDAO } from "../dao/ProductMongoDAO.js"
 import { CartMongoDAO } from "../dao/CartMongoDAO.js";
 import { auth } from "../dao/middlewares/auth.js";
-import { fakerES_MX as faker} from "@faker-js/faker"
+import { fakerES_MX as faker} from "@faker-js/faker";
+import { logger } from "../utils.js";
 
 export const router = Router()
 
@@ -32,16 +33,17 @@ router.get('/mockingproducts', async (req, res) => {
     }
 })
 
-router.get('/loggerTest', (req, res) => {
+router.get('/loggerTest', async (req, res) => {
 
-    req.logger.fatal('Prueba de log FATAL')
-    req.logger.error('Prueba de log ERROR')
-    req.logger.warning('Prueba de log WARNING')    
-    req.logger.info('Prueba de log INFO')
-    req.logger.http('Prueba de log HTTP')
-    req.logger.debug('Prueba de log DEBUG')
+    logger.fatal('Prueba de log FATAL') 
+    logger.error('Prueba de log ERROR')
+    logger.warning('Prueba de log WARNING')    
+    logger.info('Prueba de log INFO')
+    logger.http('Prueba de log HTTP')
+    logger.debug('Prueba de log DEBUG')
 
     res.status(200).render('home')
+  
 })
 
 router.get("/realtimeproducts",async (req, res) => {

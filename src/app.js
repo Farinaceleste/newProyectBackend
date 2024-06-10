@@ -18,7 +18,7 @@ import { handleError } from "./dao/middlewares/handleError.js";
 import CustomError from "./errors/CustomError.js";
 
 const PORT =config.general.PORT
-console.log(PORT)
+logger.info(PORT)
 
 
 const app = express()
@@ -37,8 +37,8 @@ app.use(session(
     }
 ))
 
-app.use('/entorno', (req, res) => {
-    console.log(config)
+app.use('/entorno', async (req, res) => {
+    logger.info(config)
 })
 
 initPassport()
@@ -53,6 +53,7 @@ app.use(express.static(path.join(__dirname, "/public")))
 app.use("/", vistasRouter)
 app.use("/realtimeproducts", vistasRouter)
 app.use('/mockingproducts', vistasRouter)
+app.use('/loggerTest', vistasRouter)
 
 app.use("/api/products", (req, res, next) => {
     req.io = io;
@@ -106,7 +107,7 @@ app.get("*", (req, res) => {
     res.status(404).send("error 404 - page not found")
 })
 
-const server = app.listen(PORT, () => {
+const server = app.listen(PORT, async() => {
     // console.log(`Server escuchando en puerto ${PORT}`)
     logger.info(`Server escuchando en puerto ${PORT}`)
 });
@@ -117,7 +118,7 @@ let usuarios = []
 const io = new Server(server)
 
 io.on("connection", socket => {
-    console.log(`Se conectó un cliente con id ${socket.id}`)
+    logger.info(`Se conectó un cliente con id ${socket.id}`)
 
     socket.on("new-user", nombre => {
         usuarios.push({ id: socket.id, nombre })
@@ -146,10 +147,10 @@ const connect = async () => {
 
         //MONGO ATLAS Base de datos en Atlas
         await mongoose.connect("mongodb+srv://farinaceleste:cele6146@cluster0.nwo2jkx.mongodb.net/ecommerce")
-        console.log('Conectado a Mongo Atlas')
+        logger.info('Conectado a Mongo Atlas')
     }
     catch (error) {
-        console.log(error.message)
+        logger.error(error.message)
     }
 }
 connect()
