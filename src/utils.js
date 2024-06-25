@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import passport from 'passport';
 import winston from 'winston';
 import { config } from './config/config.js';
+import nodemailer from "nodemailer"
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -87,4 +88,25 @@ export const middLogg = (req, res, next) => {
     req.logger=logger
     next()
 }
- 
+
+const transporter=nodemailer.createTransport(
+    {
+        service:"gmail",
+        port:"587",
+        auth:{
+            user:config.auth.EMAIL,
+            passGmail:config.auth.PASSGMAIL
+        }
+    }
+)
+
+export const sendMail=async(to, subject, message) => {
+    return await transporter.sendMail(
+        {
+            from:config.auth.EMAIL,
+            to,
+            subject,
+            html:message
+        }
+    )
+}

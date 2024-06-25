@@ -1,7 +1,7 @@
 import dotenv from "dotenv"
 
 dotenv.config({
-    path: "/.env",
+    path: "./src/.env",
     override: true
 })
 
@@ -16,6 +16,8 @@ export const config = {
     },
     auth: {
         CLIENTSECRET:process.env.CLIENTSECRET,
-        CLIENTID:process.env.CLIENTID
+        CLIENTID:process.env.CLIENTID,
+        EMAIL:process.env.EMAIL,
+        PASSGMAIL:process.env.PASSGMAIL
     }
 }

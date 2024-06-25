@@ -32,8 +32,8 @@ export class ProductMongoDAO {
         return await productsModelo.findOne(filtro).lean()
     }
 
-    async updateProduct(id, modificacion = {}) {
-        return await productsModelo.findOneAndUpdate({ _id: id }, modificacion).lean()
+    async updateProduct(id, product = {}) {
+        return await productsModelo.updateOne({ _id: id }, product).lean()
     }
 
     async deleteProduct(id) {

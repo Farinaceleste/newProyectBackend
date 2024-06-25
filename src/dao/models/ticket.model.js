@@ -1,17 +1,20 @@
 import mongoose from "mongoose";
 
 export const ticketModelo = mongoose.model(
-    'ticket',
+    'tickets',
     new mongoose.Schema(
         {
+            nroCompr: String,
             code: String,
             purchase_datatime: String, 
             amount: Number, 
-            purchaser: String
+            purchaser: String,
+            email: String, 
+            items: Array
 
         },
         {
-            timeStramps: true
+            timeStamps: true
         }
     )
 )

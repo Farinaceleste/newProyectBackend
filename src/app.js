@@ -16,23 +16,40 @@ import cookieParser from "cookie-parser";
 import { config } from "./config/config.js";
 import { handleError } from "./dao/middlewares/handleError.js";
 import CustomError from "./errors/CustomError.js";
+import swaggerJsdoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
 
-const PORT =config.general.PORT
+const PORT = config.general.PORT
 logger.info(PORT)
 
-
 const app = express()
+
+const options = {
+    definition: {
+        openapi: "3.0.0",
+        info: {
+            title: 'ABM/Users',
+            version: "1.0.0",
+            description: "Documentación del proyecto ABM usuarios"
+        },
+    },
+    apis: ["./docs/*.yaml"]
+}
+
+const spec = swaggerJsdoc(options)
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(spec))
 app.use(cookieParser('CoderCoder123'))
 app.use(session(
     {
-        secret: ('CoderCoder123'), 
+        secret: ('CoderCoder123'),
         resave: true,
-        saveUninitialized:true, 
+        saveUninitialized: true,
         store: MongoStore.create({
-            mongoUrl: "mongodb+srv://farinaceleste:cele6146@cluster0.nwo2jkx.mongodb.net/ecommerce", 
-            ttl:360
+            mongoUrl: "mongodb+srv://farinaceleste:cele6146@cluster0.nwo2jkx.mongodb.net/ecommerce",
+            ttl: 360
         })
     }
 ))
@@ -68,13 +85,13 @@ app.get("/session", (req, res) => {
     let mensaje = "Bienvenido"
     console.log(mensaje)
 
-    if (req.session.contador)  {
+    if (req.session.contador) {
         req.session.contador++
         mensaje += `.Visitas a esta ruta: ${req.session.contador}`
     } else {
         req.session.contador = 1
     }
-    
+
     res.setHeader("content-type", "text/plain")
     res.status(200).send(mensaje)
 })
@@ -87,12 +104,12 @@ app.get('/error', (req, res) => {
 
     res.setHeader("Content-Type", "text/plain")
     res.status(200).send('ok')
-    
+
 })
 
 app.get('/error2', (req, res) => {
 
-    CustomError.createError({name: 'Error de prueba numero2', cause: 'Estamos probando errores'})
+    CustomError.createError({ name: 'Error de prueba numero2', cause: 'Estamos probando errores' })
 })
 
 // app.get('/mockingproducts', (req, res) => {
@@ -107,7 +124,7 @@ app.get("*", (req, res) => {
     res.status(404).send("error 404 - page not found")
 })
 
-const server = app.listen(PORT, async() => {
+const server = app.listen(PORT, async () => {
     // console.log(`Server escuchando en puerto ${PORT}`)
     logger.info(`Server escuchando en puerto ${PORT}`)
 });
