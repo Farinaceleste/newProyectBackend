@@ -13,8 +13,7 @@ paths:
     post: 
       summary: Crea un nuevo producto
       tags: 
-      - 
-      Products
+      - Products
       responses:
         '201':
           description: Producto creado correctamente

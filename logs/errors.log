@@ -30,3 +30,18 @@
 {"level":"\u001b[34minfo\u001b[39m","message":"8080","timestamp":"2024-06-24T21:06:30.781Z"}
 {"level":"\u001b[34minfo\u001b[39m","message":"Server escuchando en puerto 8080","timestamp":"2024-06-24T21:06:30.815Z"}
 {"level":"\u001b[34minfo\u001b[39m","message":"Conectado a Mongo Atlas","timestamp":"2024-06-24T21:06:31.534Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"8080","timestamp":"2024-06-29T20:07:28.173Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Server escuchando en puerto 8080","timestamp":"2024-06-29T20:07:28.225Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Conectado a Mongo Atlas","timestamp":"2024-06-29T20:07:29.421Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"8080","timestamp":"2024-06-29T20:17:24.283Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Server escuchando en puerto 8080","timestamp":"2024-06-29T20:17:24.328Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Conectado a Mongo Atlas","timestamp":"2024-06-29T20:17:25.304Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"8080","timestamp":"2024-07-02T14:03:57.388Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Server escuchando en puerto 8080","timestamp":"2024-07-02T14:03:57.458Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Conectado a Mongo Atlas","timestamp":"2024-07-02T14:03:58.116Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"8080","timestamp":"2024-07-03T14:39:39.612Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Server escuchando en puerto 8080","timestamp":"2024-07-03T14:39:39.669Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Conectado a Mongo Atlas","timestamp":"2024-07-03T14:39:40.494Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"8080","timestamp":"2024-07-03T19:00:40.331Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Server escuchando en puerto 8080","timestamp":"2024-07-03T19:00:40.375Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Conectado a Mongo Atlas","timestamp":"2024-07-03T19:00:41.223Z"}

@@ -4,65 +4,63 @@ paths:
     get:
       summary: Retorna lista de usuarios
       tags:
-      - Users
+        - Users
       responses:
-        '200':    # status code
+        200:
           description: Obtensión correcta de users desde db
-        '500':
+        500:
           description: Error interno del servidor
-    post: 
+    post:
       summary: Crea un nuevo usuario
-      tags: 
-      - Users
+      tags:
+        - Users
       responses:
-        '201':
+        201:
           description: Usuario creado correctamente
-        '500':
+        500:
           description: Error interno del servidor
     put:
       summary: Actualiza un usuario existente en DB
-      tags: 
-      - Users
+      tags:
+        - Users
       responses:
-        '201':
+        201:
           description: Usuario modificado correctamente
-        '500':
+        500:
           description: Error interno del servidor
     delete:
-        summary: Elimina un usuario de la DB
-      tags: 
-      - Users
+      summary: Elimina un usuario de la DB
+      tags:
+        - Users
       responses:
-        '201':
+        201:
           description: Usuario eliminado correctamente
-        '500':
+        500:
           description: Error interno del servidor
-
 
 components:
   schemas:
     Users:
-      type: Object
+      type: object
       properties:
         _id:
-          type: ObjectId
+          type: string
           description: id autogenerado por Mongo
         first_name:
-          type: Number
+          type: string
           description: Nombre del usuario
         last_name:
-          type: String
+          type: string
           description: Apellido del usuario
         email:
-          type: String
+          type: string
           description: Email del usuario
         password:
-          type: String
+          type: string
           description: Contraseña del usuario
         rol:
-          type: String
-          description: Imagen del producto
+          type: string
+          description: Rol del usuario
         age:
-          type: Number
+          type: number
           description: Edad del usuario
-     

@@ -18,6 +18,7 @@ import { handleError } from "./dao/middlewares/handleError.js";
 import CustomError from "./errors/CustomError.js";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
+import glob from "glob"
 
 const PORT = config.general.PORT
 logger.info(PORT)
@@ -26,17 +27,20 @@ const app = express()
 
 const options = {
     definition: {
-        openapi: "3.0.0",
-        info: {
-            title: 'ABM/Users',
-            version: "1.0.0",
-            description: "Documentación del proyecto ABM usuarios"
-        },
+      openapi: "3.0.0",
+      info: {
+        title: 'ABM/Users',
+        version: "1.0.0",
+        description: "Documentación del proyecto ABM usuarios"
+      },
     },
-    apis: ["./docs/*.yaml"]
-}
-
-const spec = swaggerJsdoc(options)
+    swaggerOptions: {
+      apis: glob.sync('./docs/*.yaml'),
+      debug: true
+    }
+  };
+  
+  const spec = swaggerJsdoc(options);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
