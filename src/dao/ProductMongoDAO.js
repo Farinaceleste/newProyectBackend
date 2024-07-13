@@ -42,7 +42,6 @@ export class ProductMongoDAO {
 
     async createProduct (product) {
         let resultado = await productsModelo.create(product)
-        console.log(resultado)
         return resultado.toJSON()
     }
 

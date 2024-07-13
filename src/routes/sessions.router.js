@@ -1,9 +1,7 @@
 import { Router } from "express";
 import passport from "passport";
 import UserController from "../controller/user.controller.js";
-import { passportCall, sendMail } from "../utils.js";
-import { auth } from "../dao/middlewares/auth.js";
-import { UsuariosMongoDAO } from "../dao/UserMongoDAO.js";
+import { passportCall, SECRET, sendMail } from "../utils.js";
 import { usersModelo } from "../dao/models/users.model.js";
 import jwt from "jsonwebtoken";
 import { config } from "../config/config.js";
@@ -65,6 +63,8 @@ router.get('/user', passportCall('jwt'), (req, res) => {
 router.post('/login', passport.authenticate('login', {failureRedirect:'api/sessions/error'}), async (req, res) => {
 
     req.session.user = req.user
+
+    let token=jwt.sign(user, SECRET)
 
     res.setHeader('Content-Type', 'application/json')
     res.status(200).json({ message: 'login correcto', user: req.user })

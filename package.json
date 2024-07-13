@@ -2,7 +2,8 @@
   "name": "proyectoBackend2",
   "scripts": {
     "start": "node ./src/app.js",
-    "dev": "nodemon ./src/app.js"
+    "dev": "nodemon ./src/app.js", 
+    "test": "mocha ./test/** --exit"
   },
   "license": "MIT",
   "version": "1.0.0",

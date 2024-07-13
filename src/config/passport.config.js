@@ -103,28 +103,28 @@ export const initPassport = () => {
         )
     )
 
-    // passport.use(
-    //     'jwb',
-    //     new passportjwt.Strategy(
-    //         {
-    //             secretOrKey: SECRET,
-    //             jwtFromRequest: new passportjwt.ExtractJwt.fromExtractors([buscaToken])
-    //         },
-    //         async (contenidoToken, done) => {
-    //             try {
-    //                 console.log('passport')
+    passport.use(
+        'jwt',
+        new passportjwt.Strategy(
+            {
+                secretOrKey: SECRET,
+                jwtFromRequest: new passportjwt.ExtractJwt.fromExtractors([buscaToken])
+            },
+            async (contenidoToken, done) => {
+                try {
+                    console.log('passport')
                     
-    //                 if (contenidoToken === 'Maria'){
-    //                     return done (null, false, {message:'El usuario tiene permisos para acceder'})
-    //                 }
+                    if (contenidoToken === 'Maria'){
+                        return done (null, false, {message:'El usuario tiene permisos para acceder'})
+                    }
 
-    //                 return done (null, contenidoToken)
-    //             } catch (error) {
-    //                 return done(error)
-    //             }
-    //         }
-    //     )
-    // )
+                    return done (null, contenidoToken)
+                } catch (error) {
+                    return done(error)
+                }
+            }
+        )
+    )
 
     passport.serializeUser((user, done) => {
         return done(null, user)

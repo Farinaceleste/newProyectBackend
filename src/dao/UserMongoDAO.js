@@ -1,6 +1,6 @@
 import { usersModelo } from "./models/users.model.js";
 
-export class UsuariosMongoDAO {
+export default class UsuariosMongoDAO {
 
     async create(user) { // crear un nuevo usuario
         let resultado = await usersModelo.create(user)
@@ -13,6 +13,10 @@ export class UsuariosMongoDAO {
 
     async getAll(filter={}) {
         return await usersModelo.find(filter).lean()
+    }
+
+    async get() {
+        return await usersModelo.find.lean()
     }
 }
 

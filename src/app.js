@@ -7,6 +7,7 @@ import { router as CartRouter } from "./routes/cart.router.js";
 import { router as ProductRouter } from "./routes/products.router.js";
 import mongoose from "mongoose";
 import session from "express-session";
+import jwt from "jsonwebtoken"
 import MongoStore from "connect-mongo";
 import { initPassport } from "./config/passport.config.js";
 import passport from "passport";
@@ -18,7 +19,7 @@ import { handleError } from "./dao/middlewares/handleError.js";
 import CustomError from "./errors/CustomError.js";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
-import glob from "glob"
+
 
 const PORT = config.general.PORT
 logger.info(PORT)
@@ -27,20 +28,16 @@ const app = express()
 
 const options = {
     definition: {
-      openapi: "3.0.0",
-      info: {
-        title: 'ABM/Users',
-        version: "1.0.0",
-        description: "Documentación del proyecto ABM usuarios"
-      },
+        openapi: "3.0.0",
+        info: {
+            title: "ABM / Usuarios",
+            version: "1.0.0",
+            description: "Documentación del proyecto ABM Usuarios"
+        },
     },
-    swaggerOptions: {
-      apis: glob.sync('./docs/*.yaml'),
-      debug: true
-    }
-  };
-  
-  const spec = swaggerJsdoc(options);
+    apis: ["./docs/*.yaml"]
+}
+const spec = swaggerJsdoc(options)
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
