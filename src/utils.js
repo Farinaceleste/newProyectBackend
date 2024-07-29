@@ -4,109 +4,139 @@ import bcrypt from "bcrypt";
 import passport from 'passport';
 import winston from 'winston';
 import { config } from './config/config.js';
-import nodemailer from "nodemailer"
+import nodemailer from "nodemailer";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-export default __dirname;
+export const rutaProducts = join(__dirname, "data", "products.json");
+export const rutaCarts = join(__dirname, "data", "carts.json");
 
-export const rutaProducts = join(__dirname, "data", "products.json")
-export const rutaCarts = join(__dirname, "data", "carts.json")
-
-export const SECRET = "CoderCoder123"
-// export const creaHash = password => crypto.createHmac("sha256", SECRET).update(password).digest('hex')
-export const creaHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10))
-export const validaPassword = (password, passwordConHash) => bcrypt.compareSync(password, passwordConHash)
+export const SECRET = config.general.PASSWORD;
+export const creaHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+export const validaPassword = (password, passwordConHash) => bcrypt.compareSync(password, passwordConHash);
 
 export const passportCall = (estrategia) => {
     return function (req, res, next) {
         passport.authenticate(estrategia, function (err, user, info, status) {
-            if (err) { return next(err) }
+            if (err) { return next(err); }
             if (!user) {
-                res.setHeader('Content-Type', 'application-json')
+                res.setHeader('Content-Type', 'application/json');
                 return res.status(401).json({
                     error: info.message ? info.message : info.toString(),
                     detalle: info.detalle ? info.detalle : '-',
-                })
+                });
             }
-            req.user = user
-            next()
-        })(req, res, next)
-    }
-}
+            req.user = user;
+            next();
+        })(req, res, next);
+    };
+};
 
-const customLevels={
-    fatal:0,
-    error:1,
-    warning:2,
-    info:3,
-    http:4,
-    debug:5
-}
-
-export const logger = winston.createLogger(
+export const logger=winston.createLogger(
     {
-        levels: customLevels,
         transports: [
-            new winston.transports.File(
+            new winston.transports.Console(
                 {
                     level: "info",
-                    filename: "./logs/errors.log",
                     format: winston.format.combine(
                         winston.format.timestamp(),
-                        winston.format.colorize({
-                            colors:{fatal:"red", error:"orange", info:"blue", leve:"green"}
-                        }),
-                        winston.format.json()
+                        winston.format.colorize(),
+                        winston.format.simple()
                     )
-
                 }
-            )
+            ),
+            new winston.transports.Console(
+                {
+                    level: "silly",
+                    format: winston.format.combine(
+                        winston.format.timestamp(),
+                        // winston.format.colorize(),
+                        winston.format.prettyPrint()
+                    )
+                }
+            ),
+            new winston.transports.File(
+                {
+                    level: "warn",
+                    filename: "./src/logs/error.log",
+                    format: winston.format.combine(
+                        winston.format.timestamp(),
+                        // winston.format.colorize(),
+                        winston.format.prettyPrint()
+                    )
+                }
+            )            
         ]
     }
 )
-
-const transportConsola = new winston.transports.Console(
-    {
-        level: "debug",
+if (config.general.MODE != "production") {
+    logger.add(new winston.transports.Console({
+        level: 'debug',
         format: winston.format.combine(
             winston.format.timestamp(),
-            winston.format.colorize({
-                colors:{grave:"red", medio:"yellow", info:"blue", leve:"green"}
-            }),
+            winston.format.colorize({ all: true }),
             winston.format.simple()
         )
-    }
-)
-
-if(config.general.MODE != "production") {
-    logger.add(transportConsola)
+    }));
 }
 
 export const middLogg = (req, res, next) => {
-    req.logger=logger
-    next()
-}
+    req.logger = logger;
+    next();
+};
 
-const transporter=nodemailer.createTransport(
-    {
-        service:"gmail",
-        port:"587",
-        auth:{
-            user:config.auth.EMAIL,
-            passGmail:config.auth.PASSGMAIL
-        }
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    port: 587,
+    auth: {
+        user: config.auth.EMAIL,
+        pass: config.auth.PASSGMAIL
     }
-)
+});
 
-export const sendMail=async(to, subject, message) => {
-    return await transporter.sendMail(
-        {
-            from:config.auth.EMAIL,
+export const sendMail = async (to, subject, message) => {
+    try {
+        if (!to || !subject || !message) {
+            throw new Error('Missing required parameters');
+        }
+
+        const mailOptions = {
+            from: config.auth.EMAIL,
             to,
             subject,
-            html:message
-        }
-    )
+            html: message
+        };
+
+        const info = await transporter.sendMail(mailOptions);
+        return info;
+    } catch (error) {
+        console.error('Error sending email:', error);
+        throw error;
+    }
+};
+
+export default __dirname;
+
+export function generateUniqueCode() {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const codeLength = 10;
+    let code = '';
+
+    for (let i = 0; i < codeLength; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        code += characters.charAt(randomIndex);
+    }
+
+    return code;
+}
+
+export function calculateTotalAmount(products) {
+    let total = 0;
+
+    for (const item of products) {
+        total += item.quantity * item.product.price;
+    }
+
+    return total;
 }

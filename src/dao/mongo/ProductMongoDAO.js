@@ -1,24 +1,6 @@
-import { productsModelo } from "./models/products.model.js"
+import { productsModelo } from "../models/products.model.js"
 
 export class ProductMongoDAO {
-
-    // async getProducts(page, limit) {
-    //     // //return await modeloProducts.find().lean()
-
-    //     // const options = {
-    //     //     page: page || 1,
-    //     //     limit: limit || 2,
-    //     //     lean: true
-    //     // };
-
-    //     // try {
-    //     //     const result = await productsModelo.paginate({}, options);
-    //     //     return result;
-    //     // } catch (error) {
-    //     //     console.error('Error al obtener los productos:', error);
-    //     //     throw error;
-    //     // }
-    // }
 
     async getProductsPaginados(page, limit) {
         return await productsModelo.find(page, limit)
@@ -36,7 +18,7 @@ export class ProductMongoDAO {
         return await productsModelo.updateOne({ _id: id }, product).lean()
     }
 
-    async deleteProduct(id) {
+    async deleteById(id) {
         return await productsModelo.deleteOne({ _id: id }).lean()
     }
 

@@ -45,3 +45,54 @@
 {"level":"\u001b[34minfo\u001b[39m","message":"8080","timestamp":"2024-07-03T19:00:40.331Z"}
 {"level":"\u001b[34minfo\u001b[39m","message":"Server escuchando en puerto 8080","timestamp":"2024-07-03T19:00:40.375Z"}
 {"level":"\u001b[34minfo\u001b[39m","message":"Conectado a Mongo Atlas","timestamp":"2024-07-03T19:00:41.223Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":3000,"timestamp":"2024-07-15T00:58:46.252Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Server escuchando en puerto 3000","timestamp":"2024-07-15T00:58:46.297Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Conectado a Mongo Atlas","timestamp":"2024-07-15T00:58:47.152Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":3000,"timestamp":"2024-07-15T00:59:27.213Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Server escuchando en puerto 3000","timestamp":"2024-07-15T00:59:27.267Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Conectado a Mongo Atlas","timestamp":"2024-07-15T00:59:27.920Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":3000,"timestamp":"2024-07-15T01:19:51.318Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Server escuchando en puerto 3000","timestamp":"2024-07-15T01:19:51.366Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Conectado a Mongo Atlas","timestamp":"2024-07-15T01:19:52.227Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":3000,"timestamp":"2024-07-15T01:20:17.397Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Server escuchando en puerto 3000","timestamp":"2024-07-15T01:20:17.460Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Conectado a Mongo Atlas","timestamp":"2024-07-15T01:20:18.435Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":3000,"timestamp":"2024-07-15T01:20:50.080Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Server escuchando en puerto 3000","timestamp":"2024-07-15T01:20:50.143Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Conectado a Mongo Atlas","timestamp":"2024-07-15T01:20:51.010Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":3000,"timestamp":"2024-07-15T01:20:58.989Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Server escuchando en puerto 3000","timestamp":"2024-07-15T01:20:59.036Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Conectado a Mongo Atlas","timestamp":"2024-07-15T01:20:59.797Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":3000,"timestamp":"2024-07-15T01:22:24.839Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Server escuchando en puerto 3000","timestamp":"2024-07-15T01:22:24.905Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Conectado a Mongo Atlas","timestamp":"2024-07-15T01:22:25.601Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":3000,"timestamp":"2024-07-15T01:27:50.063Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Server escuchando en puerto 3000","timestamp":"2024-07-15T01:27:50.109Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Conectado a Mongo Atlas","timestamp":"2024-07-15T01:27:50.851Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":3000,"timestamp":"2024-07-15T01:28:09.495Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Server escuchando en puerto 3000","timestamp":"2024-07-15T01:28:09.539Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Conectado a Mongo Atlas","timestamp":"2024-07-15T01:28:10.141Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":3000,"timestamp":"2024-07-15T01:29:18.827Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Server escuchando en puerto 3000","timestamp":"2024-07-15T01:29:18.865Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Conectado a Mongo Atlas","timestamp":"2024-07-15T01:29:19.705Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":3000,"timestamp":"2024-07-15T01:29:36.353Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Server escuchando en puerto 3000","timestamp":"2024-07-15T01:29:36.396Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Conectado a Mongo Atlas","timestamp":"2024-07-15T01:29:37.214Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":3000,"timestamp":"2024-07-15T01:30:04.276Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Server escuchando en puerto 3000","timestamp":"2024-07-15T01:30:04.335Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Conectado a Mongo Atlas","timestamp":"2024-07-15T01:30:04.956Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":3000,"timestamp":"2024-07-15T01:30:41.875Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Server escuchando en puerto 3000","timestamp":"2024-07-15T01:30:41.922Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Conectado a Mongo Atlas","timestamp":"2024-07-15T01:30:43.088Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":3000,"timestamp":"2024-07-15T01:30:55.247Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Server escuchando en puerto 3000","timestamp":"2024-07-15T01:30:55.303Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Conectado a Mongo Atlas","timestamp":"2024-07-15T01:30:55.964Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":3000,"timestamp":"2024-07-15T21:26:18.031Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Server escuchando en puerto 3000","timestamp":"2024-07-15T21:26:18.115Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Conectado a Mongo Atlas","timestamp":"2024-07-15T21:26:19.107Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":3000,"timestamp":"2024-07-15T21:52:55.827Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Server escuchando en puerto 3000","timestamp":"2024-07-15T21:52:55.872Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Conectado a Mongo Atlas","timestamp":"2024-07-15T21:52:56.725Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":3000,"timestamp":"2024-07-15T21:52:58.404Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Server escuchando en puerto 3000","timestamp":"2024-07-15T21:52:58.449Z"}
+{"level":"\u001b[34minfo\u001b[39m","message":"Conectado a Mongo Atlas","timestamp":"2024-07-15T21:52:59.073Z"}

@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 
 export const usersModelo = mongoose.model(
     'users',
@@ -8,23 +8,28 @@ export const usersModelo = mongoose.model(
             last_name: String,
             age: Number,
             email: {
-                type: String, unique: true
-            }, 
-            password: String, 
-            rol: {
-                type: String, 
-                default: 'user',
-                type: mongoose.Types.ObjectId,
-                ref: 'roles'
+                type: String, unique: true, required: true
             },
+            password: String,
             cart: {
-                type:mongoose.Types.ObjectId, ref:'carts'
+                type: [
+                    {
+                        _id: {
+                            type: mongoose.Types.ObjectId,
+                            ref: 'carts'
+                        }
+                    }
+                ],
+                default: []
+            },
+            role: {
+                type: String,
+                default: "usuario"
             }
         },
         {
-            timeStramps: true
+            timestamps: true
         }
     )
-)
-
+);
 

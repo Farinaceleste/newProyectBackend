@@ -9,7 +9,8 @@ export const config = {
     general: {
         PASSWORD:process.env.PASSWORD,
         PORT:process.env.PORT||3000,
-        MODE:process.env.MODE||"development"
+        MODE:process.env.MODE||"development",
+        PERSISTENCE:process.env.PERSISTENCE 
     },
     db: {
         MONGOURL:process.env.MONGOURL

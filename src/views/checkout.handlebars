@@ -3,7 +3,8 @@
 <a href="/">Volver</a>
 <input id="cartId" type="text" hidden value="{{cart.user}}">
 
-
+<p>Usuario: {{user.email}}</p>
+<p>Compra n°: {{cart._id}}</p>
 <ul id="cartItems">
     {{#each cart.products}}
 
@@ -13,7 +14,7 @@
           <p>Cantidad: {{this.products.quantity}}</p>
           <p>Precio total: {{this.products.price}}</p>
         </div>
-        <button class="delete-btn" data-product-id="{{this.products._id}}">Eliminar</button>
+        <button class="delete-btn" data-product-id="borrar{{this.products._id}}">Eliminar</button>
       </li>
     </div>
 </ul>

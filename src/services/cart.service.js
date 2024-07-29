@@ -1,37 +1,38 @@
-import { CartMongoDAO as cartDAO } from "../../dao/CartMongoDAO.js";
+import { CartMongoDAO as DAO } from "../dao/mongo/CartMongoDAO.js";
 
 class CartService {
-    async deleteFromCart(cid, pid) {
-        if (!mongoose.Types.ObjectId.isValid(cid) || !mongoose.Types.ObjectId.isValid(pid)) {
-            throw new Error('id inválido');
-        }
-
-        try {
-            const updatedCart = await cartDAO.deleteFromCart(cid, pid);
-            if (!updatedCart) {
-                throw new Error('Carrito no encontrado');
-            }
-
-            return updatedCart;
-        } catch (error) {
-            throw error;
-        }
+    constructor(dao){
+        this.dao = new dao();
     }
 
-    // async finalizePurchase(cart) {
-        
-    //     const productsWithInsufficientStock = cart.products.filter((product) => {
-        
-    //       const stock = await productsDAO.getStock(product.id);
-    //       return stock < product.quantity;
-    //     });
+    async getAllCarts(){
+        return await this.dao.getAllCarts();
+    }
 
-    //     if (!productsWithInsufficientStock) {
-    //         alert('no hay stock suficiente')
-    //     } else {
-    //         const newStock = stock - cart.products._id
-    //     }
-    // }
+    async getCartById(cid){
+        return await this.dao.getCartById(cid);
+    }
+
+    async createCart(cart){
+        return await this.dao.createCart(cart);
+    }
+
+    async deleteCart(cid){
+        return await this.dao.deleteCart({cid});
+    }
+
+    async deleteFromCart(pid, cid) {
+        return await this.dao.deleteFromCart({pid, cid});
+    }
+
+    async updateCart(pid, cid){
+        return await this.dao.updateCart({pid, cid});
+    }
+
+    async getCartByPopulate(){
+        return await this.dao.getCartByPopulate();
+    }
+        
 }
 
-module.exports = CartService;
+export const cartService=new CartService(DAO)

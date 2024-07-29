@@ -1,4 +1,3 @@
-import { auth } from "../../dao/middlewares/auth"
 
 let btnSubmit = document.getElementById("submit")
 let inputEmail = document.getElementById("email")
@@ -27,7 +26,7 @@ btnSubmit.addEventListener('click', async (e) => {
         let datos = await resultado.json()
         console.log(datos)
         
-        if (status == 200) {
+        if (status === 200) {
             Swal.fire({
                 title: 'Login exitoso',
                 confirmButtonText: `Aceptar`,
@@ -67,10 +66,10 @@ linkUsuarios.addEventListener('click', async (e)=>{
 
     try {
         let info = await respuesta.json ()
-        console.log(info)
         user.textContent=JSON.stringify(info)
     } catch (error) {
         console.log(respuesta.status)
+        user.textContent=respuesta.statusText
     }
 })
 

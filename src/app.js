@@ -7,7 +7,6 @@ import { router as CartRouter } from "./routes/cart.router.js";
 import { router as ProductRouter } from "./routes/products.router.js";
 import mongoose from "mongoose";
 import session from "express-session";
-import jwt from "jsonwebtoken"
 import MongoStore from "connect-mongo";
 import { initPassport } from "./config/passport.config.js";
 import passport from "passport";
@@ -15,11 +14,10 @@ import { router as vistasRouter } from "./routes/vistas.router.js";
 import { router as sessionsRouter } from './routes/sessions.router.js';
 import cookieParser from "cookie-parser";
 import { config } from "./config/config.js";
-import { handleError } from "./dao/middlewares/handleError.js";
+import { handleError } from "./middlewares/handleError.js";
 import CustomError from "./errors/CustomError.js";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
-
 
 const PORT = config.general.PORT
 logger.info(PORT)
@@ -35,14 +33,14 @@ const options = {
             description: "Documentación del proyecto ABM Usuarios"
         },
     },
-    apis: ["./docs/*.yaml"]
+    apis: ["./docs/products.yaml"]
 }
 const spec = swaggerJsdoc(options)
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(spec))
-app.use(cookieParser('CoderCoder123'))
+app.use(cookieParser())
 app.use(session(
     {
         secret: ('CoderCoder123'),
@@ -126,7 +124,6 @@ app.get("*", (req, res) => {
 })
 
 const server = app.listen(PORT, async () => {
-    // console.log(`Server escuchando en puerto ${PORT}`)
     logger.info(`Server escuchando en puerto ${PORT}`)
 });
 

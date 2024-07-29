@@ -1,0 +1,10 @@
+{
+  message: 'prueba log level warn',
+  level: 'warn',
+  timestamp: '2024-07-24T22:50:44.801Z'
+}
+{
+  message: 'prueba log level error',
+  level: 'error',
+  timestamp: '2024-07-24T22:50:44.807Z'
+}

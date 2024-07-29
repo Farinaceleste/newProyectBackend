@@ -1,4 +1,4 @@
-import { ERRORES } from "../../errors/errors.js";
+import { ERRORES } from "../errors/errors.js";
 
 export const handleError = (error, req, res, next) => {
     console.log('*********')

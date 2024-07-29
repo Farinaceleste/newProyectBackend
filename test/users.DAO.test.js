@@ -1,7 +1,7 @@
-import chai, { expect, should } from "chai";
+import { expect, should } from "chai";
 import mongoose from "mongoose";
 import {it, describe} from "mocha"
-import UserMongoDAO from "../dao/UserMongoDAO.js"
+import UserMongoDAO from "../src/dao/UserMongoDAO.js"
 
 should()
 

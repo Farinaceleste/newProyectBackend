@@ -6,19 +6,21 @@ export const productsModelo = mongoose.model(
     'products',
     new mongoose.Schema(
         {
-            title: String, 
+            title: {type: String, unique:true, required:true}, 
             description: String, 
-            code: { 
-                type: String, unique: true},
-            price: Number, 
-            status: Boolean, 
+            code: { type: String, unique: true},
+            price: {type: Number, unique: true},
+            status: {type: Boolean, unique: true},
             thumbnail: String,
-            stock: Number
+            stock: {type: Number, unique: true, required:true},
+            owner: { type: String, default: 'admin' }
         },
         {
             timeStramps: true
         }
     )
 )
-//productsModelo.plugin(paginate)
+
+productsModelo.plugin(paginate);
+
 

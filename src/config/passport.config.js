@@ -1,12 +1,10 @@
 import passport from "passport";
 import local from "passport-local";
-import { UsuariosMongoDAO } from "../dao/UserMongoDAO.js";
-import { SECRET, creaHash, validaPassword } from "../utils.js";
+import { creaHash, validaPassword } from "../utils.js";
 import github from "passport-github2";
-import  passportjwt  from "jsonwebtoken";
-
-
-let usersDAO = new UsuariosMongoDAO()
+import passportjwt from "jsonwebtoken";
+import { usuariosService } from "../services/user.service.js";
+import { usersModelo } from "../dao/models/users.model.js";
 
 export const initPassport = () => {
 
@@ -20,36 +18,46 @@ export const initPassport = () => {
             },
             async (req, username, password, done) => {
                 try {
-                    let { first_name } = req.body
-                    if (!first_name) {
-                        return done(null, false)
+                    const { first_name, last_name, email } = req.body;
+                    if (!first_name || !email ) {
+                        return done(null, false, { message: 'complete campos faltantes' });
                     }
 
-                    let existe = await usersDAO.getOneBy({ email: username })
+                    const existe = await usuariosService.getUserByEmail(email);
 
                     if (existe) {
-                        return done(null, false)
+                        return done(null, false, { message: 'Email already exists' });
                     }
 
-                    password = creaHash(password)
+                    password = creaHash(password);
 
-                    let user = await usersDAO.create({
-                        first_name, password, email: username
-                    })
+                    let rol = await usersModelo.findOne({ descrip: "usuario" });
+                    if (!rol) {
+                        rol = await usersModelo.create({ descrip: "usuario" });
+                    }
+
+                    const user = await usuariosService.createUser({
+                        first_name,
+                        last_name,
+                        age,
+                        email: username,
+                        password,
+                        rol: rol._id,
+                        cart: null 
+                    });
 
                     if (user) {
-                        return done(null, user)
+                        return done(null, user);
                     } else {
-                        return done(null, false)
+                        return done(null, false, { message: 'Error creating user' });
                     }
 
                 } catch (error) {
-                    return done(error)
+                    return done(error);
                 }
             }
         )
-    )
-
+    );
     passport.use(
         'login',
         new local.Strategy(
@@ -58,16 +66,16 @@ export const initPassport = () => {
             },
             async (username, password, done) => {
                 try {
-                    let user = await usersDAO.getOneBy({email: username}) 
-                    if (!user){
-                        return done (null, false)
-                    }
-
-                    if(!validaPassword(password, user.password)){
+                    let user = await usuariosService.getUserByEmail(username)
+                    if (!user) {
                         return done(null, false)
                     }
 
-                    return done (null, user)
+                    if (!validaPassword(password, user.password)) {
+                        return done(null, false)
+                    }
+
+                    return done(null, user)
 
                 } catch (error) {
                     return done(error)
@@ -88,43 +96,43 @@ export const initPassport = () => {
                 try {
                     let { name: first_name, email } = profile._json
 
-                        let user = await usersDAO.getOneBy({ email })
-                        if (!user) {
-                            user = await usersDAO.create({
-                                first_name, email, profileGithub: profile
-                            })
-                        }
-                        return done(null, user)
-
-                    } catch (error) {
-                        return done(error)
+                    let user = await usuariosService.getUserByEmail( email )
+                    if (!user) {
+                        user = await usuariosService.createUser({
+                            first_name, email, profileGithub: profile
+                        })
                     }
-                }
-        )
-    )
+                    return done(null, user)
 
-    passport.use(
-        'jwt',
-        new passportjwt.Strategy(
-            {
-                secretOrKey: SECRET,
-                jwtFromRequest: new passportjwt.ExtractJwt.fromExtractors([buscaToken])
-            },
-            async (contenidoToken, done) => {
-                try {
-                    console.log('passport')
-                    
-                    if (contenidoToken === 'Maria'){
-                        return done (null, false, {message:'El usuario tiene permisos para acceder'})
-                    }
-
-                    return done (null, contenidoToken)
                 } catch (error) {
                     return done(error)
                 }
             }
         )
     )
+
+    // passport.use(
+    //     'jwt',
+    //     new passportjwt.Strategy(
+    //         {
+    //             secretOrKey: SECRET,
+    //             jwtFromRequest: new passportjwt.ExtractJwt.fromExtractors([buscaToken])
+    //         },
+    //         async (contenidoToken, done) => {
+    //             try {
+    //                 console.log('passport')
+
+    //                 if (contenidoToken === 'Maria'){
+    //                     return done (null, false, {message:'El usuario tiene permisos para acceder'})
+    //                 }
+
+    //                 return done (null, contenidoToken)
+    //             } catch (error) {
+    //                 return done(error)
+    //             }
+    //         }
+    //     )
+    // )
 
     passport.serializeUser((user, done) => {
         return done(null, user)

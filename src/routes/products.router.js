@@ -4,11 +4,13 @@ export const router = Router();
 
 router.get('/', ProductsController.getProducts)
 
+router.get('/:id', ProductsController.getById)
+
 router.post("/", ProductsController.createProduct)
 
 //router.put("/:id", ProductsController.updateProduct)
 
 router.delete("/:id", ProductsController.deleteProducts)
 
-router.get('/:id', ProductsController.getById)
+
 

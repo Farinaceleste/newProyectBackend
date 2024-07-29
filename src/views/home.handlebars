@@ -1,8 +1,6 @@
 {{>menu}}
 <hr>
 
-
-<h2>¡Bienvenido {{user.first_name}} {{user.last_name}}!</h2>
 <h3 data-cart="{{user.cart}}" id="h3User">Usuario conectado: {{user.email}}</h3>
 <input type="text" id="cart" value="{{user.cart}}" hidden>
 <div class="productList">
@@ -11,16 +9,15 @@
         <div class="product-card">
             <li>
                 <h2 class="product-name">{{this.title}}</h2>
-            </li>
-            <li>
                 <p class="product-price">${{this.price}} </p>
+                <button onclick="agregar('{{_id}}')">Add to cart</button>
             </li>
-            <button onclick="addToCart('{{_id}}')" class="add-to-cart">Agregar al carrito</button>
+            
         </div>
         {{/each}}
     </ul>
 </div>
-<a href="http://localhost:8080/checkout">Ver Carrito</a>
+<a href="/api/carts/{{user.cart}}">Ver Carrito</a>
 
 <a href="/?page=1">Pág.1</a>
 

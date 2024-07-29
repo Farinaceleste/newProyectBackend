@@ -1,121 +1,112 @@
 import { Router } from "express";
 import passport from "passport";
-import UserController from "../controller/user.controller.js";
-import { passportCall, SECRET, sendMail } from "../utils.js";
-import { usersModelo } from "../dao/models/users.model.js";
+import sessionsController from "../controller/sessions.controller.js";
+import { passportCall, sendMail } from "../utils.js";
 import jwt from "jsonwebtoken";
 import { config } from "../config/config.js";
+import { auth } from "../middlewares/auth.js";
+import { usuariosService } from "../services/user.service.js";
+import bcrypt from "bcrypt";
 
-export const router = Router()
+export const router = Router();
 
+router.get('/error', async (req, res) => {
+    res.status(500).json({ error: 'Algo salió mal' });
+});
 
-router.get('/error', async(req, res) => {
-    res.setHeader('Content-Type','application/json')
-    return res.status(500).json({error: 'Algo salió mal'})
-})
-
-router.post('/registro', passport.authenticate('registro', {failureRedirect:'api/sessions/error'}), async (req, res) => {
-    res.setHeader('Content-Type', 'application/json')
-    // return res.status(200).json({ message: 'Registro exitoso', user: req.user })
-    return res.redirect('/login');
-})
+router.post('/registro', sessionsController.register);
 
 router.post('/recupero01', async (req, res) => {
-    
-    let {email} = req.body
+    let { email } = req.body;
 
-    if(!email) {
-        res.setHeader('Content-Type', 'application/json')
-        res.status(400).json({ error: `No existen usuarios con email ${email}` })
+    if (!email) {
+        return res.status(400).json({ error: 'Debe proporcionar un email' });
     }
 
-    let user = await usersModelo.findOne({email}).lean()
-    
-    delete user.password
-    let url = `http://localhost:8080/api/sessions/recupero02?token=${token}`
-    let token = jwt.sign(user, config.general.PASSWORD, {expiresIn:'1hr'})
-    let mensaje = `Ha solicitado reinicio de clave, si no fue usted, contacte al administrador. <a href="${url}">Haga click aquí</a>`
-
-
-try {
-    await sendMail(email, 'Recupero de password', mensaje)
-    res.redirect('/recupero01.html?mensaje=Recibirá un email, siga los pasos')
-} catch (error) {
-    console.log(error)
-    res.setHeader('Content-Type', 'application/json')
-    return res.status(500).json(
-        {
-            error:`Error inesperado en el servidor.
-            detalle:${error.message}`
+    try {
+        let user = await usuariosService.getUserByEmail( email );
+        if (!user) {
+            return res.status(400).json({ error: `No existen usuarios con email ${email}` });
         }
-    )
-}
-})
 
-router.get('/user', passportCall('jwt'), (req, res) => {
-    res.setHeader('Content-Type', 'application/json')
+        delete user.password;
+        let token = jwt.sign(user, config.general.PASSWORD, { expiresIn: '1h' });
+        let url = `http://localhost:8080/api/sessions/recupero02?token=${token}`;
+        let mensaje = `Ha solicitado reinicio de clave, si no fue usted, contacte al administrador. <a href="${url}">Haga click aquí</a>`;
+
+        await sendMail(email, 'Recupero de password', mensaje);
+        res.redirect('/recupero01.html?mensaje=Recibirá un email, siga los pasos');
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            error: 'Error inesperado en el servidor',
+            detalle: error.message
+        });
+    }
+});
+
+router.get('/user', (req, res) => {
     res.status(200).json({
         mensaje: 'Perfil usuario',
         datosUsuario: req.user
-    })
-})
+    });
+});
 
-router.post('/login', passport.authenticate('login', {failureRedirect:'api/sessions/error'}), async (req, res) => {
+router.post('/login', sessionsController.login);
 
-    req.session.user = req.user
+router.get('/current', sessionsController.current);
 
-    let token=jwt.sign(user, SECRET)
-
-    res.setHeader('Content-Type', 'application/json')
-    res.status(200).json({ message: 'login correcto', user: req.user })
-})
-
-router.get('/current', (req, res) => {
-    const user = req.session.user
-    const userData = {
-        email: user.email,
+router.get('/github/callback', 
+    passport.authenticate('github', { failureRedirect: '/login' }),
+    async (req, res) => {
+        req.session.usuario = req.user;
+        res.status(200).json({ message: 'Registro exitoso', user: req.user });
     }
-    if(user) {
-        res.setHeader('Content-Type', 'application/json')
-        res.status(200).json({userData, login:req.session.user})
-    } else {
-        res.setHeader('Content-Type', 'application/json')
-        res.status(401).json({error: 'No hay usuario logueado'})
-    }  
-})
+);
 
-router.get('/logout', (req, res) => {
+router.get('/callbackGithub', passport.authenticate('github', { failureRedirect: '/api/sessions/error' }), async (req, res) => {
+    req.session.usuario = req.user;
+    res.status(200).json({ message: 'Registro exitoso', user: req.user });
+});
 
-    req.session.destroy(e => {
-        if (e) {
-            res.setHeader('Content-Type', 'application/json')
-            res.status(500).json({
-                error: 'Error al cerrar sesión',
-                detalle: `${e.message}`
-            })
-        } else {
-            console.log('Logout exitoso')
-            res.redirect('/login');
+router.get("/recupero02", (req, res) => {
+    const { token } = req.query;
+
+    try {
+        const decoded = jwt.verify(token, config.SECRET);
+        res.redirect(`/recoverpsw02.html?token=${token}`);
+    } catch (error) {
+        res.status(400).json({ error: "Token inválido o expirado" });
+    }
+});
+
+router.post("/recupero03", async (req, res) => {
+    const { token, password, confirmPassword } = req.body;
+
+    if (!token) {
+        return res.status(400).json({ error: "Token es requerido" });
+    }
+
+    if (password !== confirmPassword) {
+        return res.status(400).json({ error: "Las contraseñas no coinciden" });
+    }
+
+    try {
+        const decoded = jwt.verify(token, config.SECRET);
+        const userId = decoded._id;
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const updateResult = await usuariosService.updateOne({ _id: userId }, { password: hashedPassword });
+
+        if (updateResult.nModified === 0) {
+            return res.status(400).json({ error: "Usuario no encontrado para actualizar contraseña" });
         }
-    })
-})
 
-router.get('/github', passport.authenticate('github', {}) , async (req, res) => {
+        res.status(200).json({ message: "Contraseña actualizada exitosamente" });
+    } catch (error) {
+        console.error('Error al cambiar la contraseña:', error);
+        res.status(400).json({ error: "Token inválido o expirado" });
+    }
+});
 
-})
-
-router.get('/callbackGithub', passport.authenticate('github', {failureRedirect:'api/sessions/error'}) , async (req, res) => {
-
-    req.session.usuario=req.user
-
-    res.setHeader('Content-Type','application/json')
-    res.status(200).json({message: 'Registro exitoso', user: req.user})
-
-})
-
-router.get('/', UserController.getAll)
-
-router.post('/', UserController.create)
-
-router.post('/', UserController.getBy)
-
+export default router;

@@ -1,4 +1,3 @@
-
 paths:
   /api/users/:
     get:
@@ -6,36 +5,36 @@ paths:
       tags:
         - Users
       responses:
-        200:
-          description: Obtensión correcta de users desde db
-        500:
+        '200':
+          description: Obtención correcta de usuarios desde db
+        '500':
           description: Error interno del servidor
     post:
       summary: Crea un nuevo usuario
       tags:
         - Users
       responses:
-        201:
+        '201':
           description: Usuario creado correctamente
-        500:
+        '500':
           description: Error interno del servidor
     put:
       summary: Actualiza un usuario existente en DB
       tags:
         - Users
       responses:
-        201:
+        '201':
           description: Usuario modificado correctamente
-        500:
+        '500':
           description: Error interno del servidor
     delete:
       summary: Elimina un usuario de la DB
       tags:
         - Users
       responses:
-        201:
+        '201':
           description: Usuario eliminado correctamente
-        500:
+        '500':
           description: Error interno del servidor
 
 components:

@@ -1,7 +1,9 @@
-import chai, { expect, should } from "chai";
+import { expect, should } from "chai";
 import mongoose from "mongoose";
 import {it, describe} from "mocha"
-import { ProductMongoDAO } from "../dao/ProductMongoDAO.js";
+import { ProductMongoDAO } from "../src/dao/ProductMongoDAO.js";
+import { faker } from "@faker-js/faker";
+
 
 should()
 
@@ -47,14 +49,19 @@ describe("Pruebas al DAO de Productos", function(){
     })
 
     it("El método create permite crear un producto en la base de datos", async function(){
-        let mockUser={
-            first_name:"Juan", last_name:"Lopez", email:"farinaceleste@gmail.com", password:"123"
+        let mockProd={
+            "title": faker.commerce.product,
+            "price": faker.commerce.price,
+            "code": faker.number,
+            "description": faker.commerce.productDescription,
+            "stock": faker.number,
+            "_id": faker.number
         }
 
         let resultado=await mongoose.connection.collection("ecommerce").findOne({email:"farinaceleste@gmail.com"})
         expect(resultado).to.be.null
 
-        resultado=await this.productDAO.create(mockUser)
+        resultado=await this.productDAO.create(mockProd)
         expect(resultado.toJSON()).to.haveOwnProperty("_id")
         
         resultado=await mongoose.connection.collection("ecommerce").findOne({email:"farinaceleste@gmail.com"})
@@ -64,8 +71,19 @@ describe("Pruebas al DAO de Productos", function(){
 
     it("El método delete permite eliminar un producto de la BD", async function(){
 
-        let resultado=await this.productDAO.get()
-        
+        let mockProd={
+            "title": faker.commerce.product,
+            "price": faker.commerce.price,
+            "code": faker.number,
+            "description": faker.commerce.productDescription,
+            "stock": faker.number,
+            "_id": faker.number
+        }
+
+        resultado=await this.productDAO.findOne(mockProd)
+        expect(resultado.toJSON()).to.haveOwnProperty("_id")
+        let resultado=await this.productDAO.delete(mockProd)
+        expect(resultado._id).to.be.ok
 
 
     })
