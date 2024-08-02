@@ -2,9 +2,21 @@ import passport from "passport";
 import local from "passport-local";
 import { creaHash, validaPassword } from "../utils.js";
 import github from "passport-github2";
-import passportjwt from "jsonwebtoken";
+import JwtStrategy from 'passport-jwt';
 import { usuariosService } from "../services/user.service.js";
 import { usersModelo } from "../dao/models/users.model.js";
+import { cartService } from "../services/cart.service.js";
+import { config } from "./config.js";
+
+const buscarToken = (req) => {
+    let token = null
+
+    if (req.cookies.coderCookie) {
+        token = req.cookies.coderCookie
+    }
+
+    return token
+}
 
 export const initPassport = () => {
 
@@ -18,8 +30,8 @@ export const initPassport = () => {
             },
             async (req, username, password, done) => {
                 try {
-                    const { first_name, last_name, email } = req.body;
-                    if (!first_name || !email ) {
+                    const { first_name, last_name, email, age } = req.body;
+                    if (!first_name || !email) {
                         return done(null, false, { message: 'complete campos faltantes' });
                     }
 
@@ -31,27 +43,27 @@ export const initPassport = () => {
 
                     password = creaHash(password);
 
-                    let rol = await usersModelo.findOne({ descrip: "usuario" });
-                    if (!rol) {
-                        rol = await usersModelo.create({ descrip: "usuario" });
+                    const role = req.body.role;
+                    let rol;
+                    if (role === 'user') {
+                        rol = await usersModelo.findOne({ descrip: "user" });
+                    } else if (role === 'admin') {
+                        rol = await usersModelo.findOne({ descrip: "admin" });
                     }
-
-                    const user = await usuariosService.createUser({
+                    const newCart = await cartService.createCart({})
+                    const newUser = await usuariosService.createUser({
                         first_name,
                         last_name,
                         age,
                         email: username,
                         password,
-                        rol: rol._id,
-                        cart: null 
+                        role: role,
+                        cart: newCart._id
                     });
-
-                    if (user) {
-                        return done(null, user);
-                    } else {
-                        return done(null, false, { message: 'Error creating user' });
-                    }
-
+console.log((newCart._id))
+                    delete newUser.password
+                    return done(null, newUser)
+                    
                 } catch (error) {
                     return done(error);
                 }
@@ -63,6 +75,7 @@ export const initPassport = () => {
         new local.Strategy(
             {
                 usernameField: "email",
+                passwordField: "password"
             },
             async (username, password, done) => {
                 try {
@@ -96,7 +109,7 @@ export const initPassport = () => {
                 try {
                     let { name: first_name, email } = profile._json
 
-                    let user = await usuariosService.getUserByEmail( email )
+                    let user = await usuariosService.getUserByEmail(email)
                     if (!user) {
                         user = await usuariosService.createUser({
                             first_name, email, profileGithub: profile
@@ -111,28 +124,20 @@ export const initPassport = () => {
         )
     )
 
-    // passport.use(
-    //     'jwt',
-    //     new passportjwt.Strategy(
-    //         {
-    //             secretOrKey: SECRET,
-    //             jwtFromRequest: new passportjwt.ExtractJwt.fromExtractors([buscaToken])
-    //         },
-    //         async (contenidoToken, done) => {
-    //             try {
-    //                 console.log('passport')
-
-    //                 if (contenidoToken === 'Maria'){
-    //                     return done (null, false, {message:'El usuario tiene permisos para acceder'})
-    //                 }
-
-    //                 return done (null, contenidoToken)
-    //             } catch (error) {
-    //                 return done(error)
-    //             }
-    //         }
-    //     )
-    // )
+    passport.use("current",
+        new JwtStrategy.Strategy(
+            {
+                secretOrKey: config.general.PASSWORD,
+                jwtFromRequest: new JwtStrategy.ExtractJwt.fromExtractors([buscarToken])
+            },
+            async (user, done) => {
+                try {
+                    return done(null, user)
+                } catch (error) {
+                    return done(error)
+                }
+            }
+        ))
 
     passport.serializeUser((user, done) => {
         return done(null, user)

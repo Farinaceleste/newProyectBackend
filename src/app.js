@@ -5,13 +5,14 @@ import { engine } from "express-handlebars";
 import { Server } from "socket.io";
 import { router as CartRouter } from "./routes/cart.router.js";
 import { router as ProductRouter } from "./routes/products.router.js";
+import { router as vistasRouter } from "./routes/vistas.router.js";
+import { router as sessionsRouter } from './routes/sessions.router.js';
+import{ router as usersRouter } from "./routes/user.router.js"
 import mongoose from "mongoose";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import { initPassport } from "./config/passport.config.js";
 import passport from "passport";
-import { router as vistasRouter } from "./routes/vistas.router.js";
-import { router as sessionsRouter } from './routes/sessions.router.js';
 import cookieParser from "cookie-parser";
 import { config } from "./config/config.js";
 import { handleError } from "./middlewares/handleError.js";
@@ -40,7 +41,7 @@ const spec = swaggerJsdoc(options)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(spec))
-app.use(cookieParser())
+app.use(cookieParser(config.auth.COOKIE))
 app.use(session(
     {
         secret: ('CoderCoder123'),
@@ -78,6 +79,7 @@ app.use("/api/products", (req, res, next) => {
 
 app.use("/api/carts", CartRouter)
 app.use("/api/sessions", sessionsRouter)
+app.use("/api/users", usersRouter)
 
 app.get("/session", (req, res) => {
 

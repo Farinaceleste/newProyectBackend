@@ -2,6 +2,15 @@
 <hr>
 <div class="form-container">
     <form action="/api/sessions/registro" method='post' class="form">
+
+    {{#if error}}
+        <div style="font-weight: bold; color:red;">{{error}}</div>
+    {{/if}}
+
+    {{#if mensaje}}
+        <div style="font-weight: bold; color:green;">{{mensaje}}</div>
+    {{/if}}
+
         <h2>Formulario de Registro</h2>
         <label for="nombre">Nombre:</label>
         <input type="text" id="nombre" name="first_name" required>

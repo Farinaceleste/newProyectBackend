@@ -1,27 +1,29 @@
 import mongoose from "mongoose";
-//import paginate from "mongoose-paginate-v2"
+
 
 export const cartsModelo = mongoose.model(
-    'carts',
-    new mongoose.Schema(
-        {
-            products: {
-              type: [
-                {
-                  product: {
-                    type: mongoose.Types.ObjectId, ref: 'products'
-                  },
-                  cantidad: Number
-                }
-              ]
-            }
-        },
-        {
-            timeStramps: true
-        }
-    )
+  'carts',
+  new mongoose.Schema(
+    {
+      userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+      products: {
+        type: [
+          {
+            product: {
+              type: mongoose.Types.ObjectId, ref: "products"
+            },
+            cantidad: Number
+          }
+        ]
+      }
+    },
+    {
+      timestamps: true,
+      createdAt: { type: Date, default: Date.now }
+    }
+  )
 )
-//cartsModelo.plugin(paginate)
+
 
 
 

@@ -1,20 +1,24 @@
 import { Router } from "express";
 import passport from "passport";
-import sessionsController from "../controller/sessions.controller.js";
 import { passportCall, sendMail } from "../utils.js";
 import jwt from "jsonwebtoken";
 import { config } from "../config/config.js";
-import { auth } from "../middlewares/auth.js";
 import { usuariosService } from "../services/user.service.js";
 import bcrypt from "bcrypt";
 
 export const router = Router();
 
 router.get('/error', async (req, res) => {
-    res.status(500).json({ error: 'Algo salió mal' });
+    res.status(500).json({ error: 'Algo salió mal', message: error.message });
 });
 
-router.post('/registro', sessionsController.register);
+router.post('/registro', passport.authenticate("registro", {
+    failureRedirect: "/api/sessions/error"
+}), (req, res) => {
+    console.log(req.user)
+    return res.redirect(`/registro?mensaje=Registro exitoso para ${user.email}`)
+});
+
 
 router.post('/recupero01', async (req, res) => {
     let { email } = req.body;
@@ -24,7 +28,7 @@ router.post('/recupero01', async (req, res) => {
     }
 
     try {
-        let user = await usuariosService.getUserByEmail( email );
+        let user = await usuariosService.getUserByEmail(email);
         if (!user) {
             return res.status(400).json({ error: `No existen usuarios con email ${email}` });
         }
@@ -52,11 +56,39 @@ router.get('/user', (req, res) => {
     });
 });
 
-router.post('/login', sessionsController.login);
+router.post('/login', passport.authenticate("login", { failureRedirect: "/api/sessions/error" }), async (req, res) => {
 
-router.get('/current', sessionsController.current);
+    let user = req.user
+    user = { ...user }
+    delete user.password
+    let token = jwt.sign(user, config.auth.COOKIE, { expiresIn: "1h" })
+    req.session.user = user
+    console.log(req.user.role)
+    res.cookie(config.auth.COOKIE, token, { maxAge: 1000 * 60 * 60, signed: true, httpOnly: true })
 
-router.get('/github/callback', 
+    if (user) {
+        res.status(200).render("profile", { user })
+    }
+
+})
+
+
+
+router.get('/current', passportCall("current"), (req, res) => {
+    let user = req.session.user
+
+    try {
+        if (user) {
+            res.status(200).render("profile", { user })
+        } else {
+            res.status(401).redirect("/login")
+        }
+    } catch (error) {
+        console.error(error)
+    }
+});
+
+router.get('/github/callback',
     passport.authenticate('github', { failureRedirect: '/login' }),
     async (req, res) => {
         req.session.usuario = req.user;
@@ -65,7 +97,8 @@ router.get('/github/callback',
 );
 
 router.get('/callbackGithub', passport.authenticate('github', { failureRedirect: '/api/sessions/error' }), async (req, res) => {
-    req.session.usuario = req.user;
+    req.session.user = req.user;
+    delete user.password
     res.status(200).json({ message: 'Registro exitoso', user: req.user });
 });
 
@@ -109,4 +142,17 @@ router.post("/recupero03", async (req, res) => {
     }
 });
 
-export default router;
+router.get("/logout", (req, res) => {
+    req.session.destroy(e => {
+        if (e) {
+            res.setHeader('Content-Type', 'application/json')
+            res.status(500).json({
+                error: 'Error al cerrar sesión',
+                detalle: `${e.message}`
+            })
+        } else {
+            console.log('Logout exitoso')
+            res.redirect('/login');
+        }
+    })
+})

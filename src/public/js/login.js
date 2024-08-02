@@ -1,4 +1,3 @@
-
 let btnSubmit = document.getElementById("submit")
 let inputEmail = document.getElementById("email")
 let inputPassword = document.getElementById("password")
@@ -24,7 +23,7 @@ btnSubmit.addEventListener('click', async (e) => {
 
         let status = resultado.status
         let datos = await resultado.json()
-        console.log(datos)
+        console.log(resultado, datos)
         
         if (status === 200) {
             Swal.fire({

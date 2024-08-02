@@ -1,19 +1,21 @@
 import { Router } from "express";
 import CartController from "../controller/carts.controller.js";
-import  TicketController from "../controller/ticket.controller.js";
+import { passportCall } from "../utils.js";
 export const router = Router()
 
-router.get('/', CartController.getCarts)
+router.post('/',CartController.createCart)
 
-router.get("/:cid", CartController.getCartById)
+router.get('/:cid', CartController.getCartById);
 
-router.post("/", CartController.createCart)
+router.post('/:cid/:pid', CartController.addProdToExistCart);
 
-router.put("/:cid/products/:pid", CartController.updateCart)
+router.delete('/:cartId/products/:productId', CartController.deleteFromCart);
+  
+router.delete("/:cartId", CartController.deleteCart);
+  
+router.put("/:cid/product/:pid", CartController.updateProductQuantity);
 
-router.delete("/:cid/products/:pid", CartController.deleteFromCart)
+router.post("/:cid/purchase", passportCall('current'), CartController.purchaseCart);
 
-router.delete("/:cid", CartController.deleteCart)
-
-router.get('/:cid/purchase', TicketController.createTicket)
+router.get("/", CartController.getCarts)
 

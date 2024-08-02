@@ -19,6 +19,7 @@ export const config = {
         CLIENTSECRET:process.env.CLIENTSECRET,
         CLIENTID:process.env.CLIENTID,
         EMAIL:process.env.EMAIL,
-        PASSGMAIL:process.env.PASSGMAIL
+        PASSGMAIL:process.env.PASSGMAIL,
+        COOKIE:process.env.COOKIE
     }
 }

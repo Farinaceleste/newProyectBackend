@@ -1,5 +1,5 @@
-let btnDeleteSesion = document.getElementById("deleteSesion")
 
+let btnDeleteSesion = document.getElementById("deleteSesion")
 
 btnDeleteSesion.addEventListener('click', async (e) => {
     e.preventDefault()

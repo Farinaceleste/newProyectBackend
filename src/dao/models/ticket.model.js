@@ -10,7 +10,7 @@ export const ticketModelo = mongoose.model(
             purchaser: { type: String, required: true }
         },
         {
-            timeStamps: true
+            timestamps: true
         }
     )
 )

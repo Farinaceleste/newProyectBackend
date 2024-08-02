@@ -1,15 +1,11 @@
 import { cartsModelo } from "../models/carts.model.js"
+import { usersModelo } from "../models/users.model.js"
 
 export class CartMongoDAO {
 
     async getAllCarts() {
 
         return await cartsModelo.find().lean()
-
-
-        // let carritos = await modeloCarts.find().populate("products.product").lean();
-        // console.log(JSON.stringify(carritos, null, 2));
-        // return carritos
     }
 
     async getCartById(cid) {
@@ -25,12 +21,16 @@ export class CartMongoDAO {
     }
 
     async createCart() {
-        let resultado = await cartsModelo.create({ products: [] })
-        return resultado.toJSON()
+        const newCart = await cartsModelo.create({ products: [] });
+        return newCart.toJSON()
+        
     }
 
-    async updateCart(cid, pid) {
-        return await cartsModelo.updateOne(cid, { _id: pid }).lean()
+    async updateCart(cid, cartUpdates) {
+        return await cartsModelo.updateOne(
+            { _id: cid },
+            { $set: cartUpdates }
+        ).lean();
     }
 
     async deleteFromCart(cid, pid) {
@@ -38,7 +38,7 @@ export class CartMongoDAO {
             { new: true })
     }
 
-    async updateQuantityProduct() {
+    async updateQuantityProduct(cid, pid, quantity) {
         try {
             const cart = await cartsModelo.getCartById(cid);
 
@@ -46,17 +46,20 @@ export class CartMongoDAO {
                 throw new Error(`Carrito no encontrado para el ID ${cid}`);
             }
 
-            const productToUpdate = cart.products.find((product) =>
-                product.pid.equals(pid)
+            const productIndex = cart.products.findIndex(
+                (product) => product.product.toString() === pid.toString()
             );
 
-            if (!productToUpdate) {
+            if (productIndex === -1) {
                 throw new Error(`Producto no encontrado en el carrito`);
             }
 
-            productToUpdate.quantity = updateQuantity;
+            cart.products[productIndex].cantidad = quantity;
 
-            await cartsModelo.create();
+            await cartsModelo.updateOne(
+                { _id: cid },
+                { $set: { products: cart.products } }
+            );
 
             return cart;
         } catch (error) {
@@ -66,5 +69,4 @@ export class CartMongoDAO {
             );
         }
     }
-
 }

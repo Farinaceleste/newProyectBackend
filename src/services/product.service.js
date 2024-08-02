@@ -17,12 +17,12 @@ class ProductService {
         return await this.dao.createProduct(product);
     }
 
-    async deleteProduct(id) {
-        return await this.dao.deleteProduct(id);
-    }
-
     async deleteById(id){
         return await this.dao.deleteById(id);
+    }
+
+    async updateProduct(id, product = {}) {
+        return await this.dao.updateProduct({ _id: id }, product)
     }
 }
 

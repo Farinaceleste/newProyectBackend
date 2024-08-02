@@ -176,9 +176,6 @@ h2 {
     background: #004999;
 }
 
-
-
-
 nav {
     background-color: #333;
     overflow: hidden;
@@ -445,4 +442,12 @@ body {
     justify-content: center;
     gap:15px;
     padding: 5px;
+  }
+
+.container-cards{
+    display: flex;
+    flex-wrap: wrap;
+   justify-content: center;
+   padding:3px;
+   background-color: #3e8e41;
   }

@@ -1,24 +1,43 @@
 import { Router } from "express";
 import { auth } from "../middlewares/auth.js";
-import { fakerES_MX as faker} from "@faker-js/faker";
+import { fakerES_MX as faker } from "@faker-js/faker";
 import { productsService } from "../services/product.service.js";
+import { cartService } from "../services/cart.service.js";
+import passport from "passport";
 
 export const router = Router()
 
 router.get("/", async (req, res) => {
 
     let user = req.session.user
-        
+
     let products = await productsService.getProducts()
     res.status(200).render("home", {
         products, user
     })
 })
 
+router.get("/profile", async (req, res) => {
+    let user = req.session.user
+
+    try {
+        if (user) {
+            res.status(200).render("profile", { user })
+        } else {
+            res.status(401).redirect("/login")
+        }
+    } catch (error) {
+        console.error(error)
+    }
+
+
+
+})
+
 router.get('/mockingproducts', async (req, res) => {
 
     try {
-        const productsFaker = Array.from({ length: 100 }, () => ({producto : faker.commerce.product()}));
+        const productsFaker = Array.from({ length: 100 }, () => ({ producto: faker.commerce.product() }));
         console.log(productsFaker);
         res.render('mockingproducts', { productsFaker });
     } catch (error) {
@@ -36,11 +55,11 @@ router.get('/loggerTest', async (req, res) => {
     req.logger.error("prueba log level error")
 
     res.status(200).render('home')
-  
+
 })
 
-router.get("/realtimeproducts",async (req, res) => {
-// , auth(['admin'])
+router.get("/realtimeproducts", async (req, res) => {
+    // , auth(['admin'])
     let products = await productsService.getProducts()
 
     res.setHeader('Content-Type', 'text/html')
@@ -68,16 +87,18 @@ router.get('/registro', async (req, res) => {
     res.status(200).render('registro', { error, mensaje, login: req.session.user })
 })
 
-// router.get("/checkout", passportCall("current"), async (req, res) => {
+router.get("/checkout", passport.authenticate("current"), async (req, res) => {
 
-//     let cart = await cartService.getCartByPopulate({_id:req.user.cart})
-//     console.log(cart)
+    let cart = await cartService.getCartByPopulate({_id:req.user.cart})
+    console.log(cart)
 
-//     res.setHeader('Content-Type', 'text/html')
-//     res.status(200).render('checkout', {user:req.user.carrito})
-// })
+    if(!cart)
 
-router.get("/products", auth(['public']),async (req, res) => {
+    res.setHeader('Content-Type', 'text/html')
+    res.status(200).render('checkout', {user:req.user, cart})
+})
+
+router.get("/products", async (req, res) => {
 
     let { pagina, limit } = req.query
 

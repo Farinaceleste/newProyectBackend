@@ -1,4 +1,3 @@
-
 import mongoose from "mongoose";
 import { ticketService } from "../services/ticket.service.js";
 import { productsService } from "../services/product.service.js";
@@ -20,14 +19,14 @@ async function checkProductStock(productId, quantity) {
 async function updateProductStock(productId, quantity) {
     const product = await productsService.getProductById({ _id: productId });
     product.stock -= quantity;
-    await ProductsService.updateProduct(productId, product);
+    await productsService.updateProduct(productId, product);
     return product;
 }
 
 export default class TicketController {
     static createTicket = async (req, res) => {
         const { cid } = req.params;
-        const user = req.user; // Assuming user information is available in req.user
+        const user = req.user; 
 
         if (!isValidObjectId(cid)) {
             res.setHeader('Content-Type', 'application/json');

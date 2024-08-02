@@ -1,7 +1,8 @@
+import UsuariosController from "../controller/users.controller.js";
 import { usuariosService } from "../services/user.service.js"
 import { Router } from "express";
 
-const router = Router();
+export const router = Router();
 
 router.put('/premium/:uid', async (req, res) => {
     const { uid } = req.params;
@@ -23,4 +24,9 @@ router.put('/premium/:uid', async (req, res) => {
     }
 });
 
-module.exports = router;
+router.get("/", UsuariosController.getUsers)
+
+router.get("/:uid", UsuariosController.getUsuarioById)
+
+router.post("/", UsuariosController.createUser)
+
