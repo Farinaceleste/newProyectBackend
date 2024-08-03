@@ -50,7 +50,7 @@ export const initPassport = () => {
                     } else if (role === 'admin') {
                         rol = await usersModelo.findOne({ descrip: "admin" });
                     }
-                    const newCart = await cartService.createCart({})
+                    const newCart = await cartService.createCart();
                     const newUser = await usuariosService.createUser({
                         first_name,
                         last_name,
@@ -60,10 +60,10 @@ export const initPassport = () => {
                         role: role,
                         cart: newCart._id
                     });
-console.log((newCart._id))
+                    console.log((newCart._id))
                     delete newUser.password
                     return done(null, newUser)
-                    
+
                 } catch (error) {
                     return done(error);
                 }
@@ -127,17 +127,18 @@ console.log((newCart._id))
     passport.use("current",
         new JwtStrategy.Strategy(
             {
-                secretOrKey: config.general.PASSWORD,
+                secretOrKey: config.general.PASSWORD, 
                 jwtFromRequest: new JwtStrategy.ExtractJwt.fromExtractors([buscarToken])
             },
             async (user, done) => {
                 try {
-                    return done(null, user)
+                    return done(null, user);
                 } catch (error) {
-                    return done(error)
+                    return done(error);
                 }
             }
-        ))
+        )
+    );
 
     passport.serializeUser((user, done) => {
         return done(null, user)

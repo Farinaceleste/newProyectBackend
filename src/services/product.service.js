@@ -10,7 +10,7 @@ class ProductService {
     }
 
     async getProductById(id) { 
-        return await this.dao.getById({ id });
+        return await this.dao.getProductById({ id });
     }
 
     async createProduct(product) {

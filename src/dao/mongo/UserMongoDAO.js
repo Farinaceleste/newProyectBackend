@@ -41,7 +41,7 @@ export class UsuariosMongoDAO {
 
     async deleteUser(id) {
         try {
-            return await usersModelo.deleteOne({ _id: id });
+            return await usersModelo.findByIdAndDelete({ _id: id });
         } catch (error) {
             console.error("Error eliminando usuario:", error);
             throw error;

@@ -7,7 +7,7 @@ import passport from "passport";
 
 export const router = Router()
 
-router.get("/", async (req, res) => {
+router.get("/",  async (req, res) => {
 
     let user = req.session.user
 
@@ -29,8 +29,6 @@ router.get("/profile", async (req, res) => {
     } catch (error) {
         console.error(error)
     }
-
-
 
 })
 
@@ -75,59 +73,44 @@ router.get("/chat", async (req, res) => {
 
 router.get('/login', async (req, res) => {
 
-    res.status(200).render('login', { login: req.session.user })
+    res.setHeader('Content-Type', 'text/html')
+    res.status(200).render('login', { login: req.user })
 
-    // return res.redirect('/perfil');
 })
 
 router.get('/registro', async (req, res) => {
 
     let { error, mensaje } = req.query
 
-    res.status(200).render('registro', { error, mensaje, login: req.session.user })
+    res.status(200).render('registro', { error, mensaje, login: req.user })
 })
 
-router.get("/checkout", passport.authenticate("current"), async (req, res) => {
+router.get("/checkout", async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.redirect("/login");
+      }
 
-    let cart = await cartService.getCartByPopulate({_id:req.user.cart})
-    console.log(cart)
+      const cartId = req.user.cart;
 
-    if(!cart)
-
-    res.setHeader('Content-Type', 'text/html')
-    res.status(200).render('checkout', {user:req.user, cart})
-})
-
-router.get("/products", async (req, res) => {
-
-    let { pagina, limit } = req.query
-
-    if (!pagina) {
-        pagina = 1
+      const cart = await cartService.getCartById(cartId);
+  
+      res.render("checkout", { user: req.user, cart });
+    } catch (error) {
+      console.error(error);
     }
+  });
 
-    if (!limit) {
-        limit = 3
-    }
+router.get("/products", passport.authenticate("current"),async (req, res) => {
 
-    let {
-        docs: products,
-        totalPages,
-        prevPage, nextPage,
-        hasPrevPage, hasNextPage
+    let products = await productsService.getProducts()
 
-    } = await productsService.getProducts()
+    let user = req.session.user
 
-    console.log(JSON.stringify(products, null, 5))
-
-    res.setHeader('Content-Type', 'text/html')
-    res.status(200).render("products", {
-        products,
-        totalPages,
-        prevPage, nextPage,
-        hasNextPage, hasPrevPage
-        , login: req.session.user
+    res.setHeader("Content-Type", "text/html")
+    res.status(200).render("products",{
+        products, user
     })
-
+    
 })
 

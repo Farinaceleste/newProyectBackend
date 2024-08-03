@@ -30,3 +30,5 @@ router.get("/:uid", UsuariosController.getUsuarioById)
 
 router.post("/", UsuariosController.createUser)
 
+router.delete("/:uid", UsuariosController.deleteUser)
+

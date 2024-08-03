@@ -60,7 +60,7 @@ app.use('/entorno', async (req, res) => {
 
 initPassport()
 app.use(passport.initialize())
-//app.use(passport.session())
+app.use(passport.session())
 app.use(middLogg)
 app.engine("handlebars", engine())
 app.set("view engine", "handlebars")

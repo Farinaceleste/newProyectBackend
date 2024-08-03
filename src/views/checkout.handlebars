@@ -1,27 +1,30 @@
 {{>menu}}
 <h1>Mi carrito</h1>
 <a href="/">Volver</a>
-<input id="cartId" type="text" hidden value="{{cart.user}}">
-
+<br>
+<input id="cartId" type="text" hidden value="{{user.cart}}">
+<br>
 <p>Usuario: {{user.email}}</p>
-<p>Compra n°: {{cart._id}}</p>
+<p>Compra n°: {{user.cart}}</p>
 <ul id="cartItems">
     {{#each cart.products}}
 
       <li class="cart-item">
         <div class="product-info">
-          <h3>{{this.products.title}}</h3>
-          <p>Cantidad: {{this.products.quantity}}</p>
-          <p>Precio total: {{this.products.price}}</p>
+          <h3>{{product.title}}</h3>
+          <p>Cantidad: {{quantity}}</p>
+          <p>Precio total: {{product.price}}</p>
         </div>
-        <button class="delete-btn" data-product-id="borrar{{this.products._id}}">Eliminar</button>
+        <button class="delete-btn" data-product-id="borrar{{_id}}">Eliminar</button>
       </li>
     </div>
 </ul>
 
 {{/each}}
+<br>
 <a href="/">Seguir comprando</a>
-<a href="/api/carts/buy">{{cart._id}}</a>
+<br>
+<a href="/api/carts/{{user.cart}}/purchase/">Finalizar compra</a>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/socket.io/socket.io.js"></script>

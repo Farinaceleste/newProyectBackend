@@ -11,6 +11,24 @@ export default class UsuariosController{
         res.status(200).json({user})
     }
 
+    static deleteUser=async(req,res)=>{
+
+        const { id } = req.params;
+
+        try {
+            const resultado = await usuariosService.deleteUser();
+            if (resultado.deletedCount > 0) {
+                res.setHeader("Content-Type", "application/json");
+                return res.status(200).json({ message: `Usuario eliminado con ID: ${id}` });
+            } else {
+                res.setHeader("Content-Type", "application/json");
+                return res.status(400).json({ error: `No existen usuarios con el ID: ${id}` });
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    } 
+
     static getUsuarioById=async(req,res)=>{
 
         let {id}=req.params

@@ -66,10 +66,10 @@ export default class CartController {
 
     static async createCart(req, res) {
         try {
-            const userId = req.user._id;
-            const newCart = { userId, products: req.body.products || [] };
-            const savedCart = await cartService.createCart(newCart);
-            res.status(201).json({ newCart: savedCart });
+
+            const newCart = req.body.products || [];
+            res.status(201).json(newCart);
+
         } catch (error) {
             console.error("Error al guardar el carrito", error);
             res.status(500).json({ message: 'Hubo un error al crear la compra' });
@@ -111,7 +111,7 @@ export default class CartController {
 
     static async updateCart(req, res) {
         const { cid, pid } = req.params;
-        const userId = req.user._id; 
+        const userId = req.user._id;
 
         if (!isValidObjectId(cid) || !isValidObjectId(pid)) {
             return res.status(400).json({ error: 'Id de producto o carrito inválido' });
@@ -201,12 +201,16 @@ export default class CartController {
         }
     }
 
-    static async updateProductQuantity(req, res) {
+    static async addProdToCart(req, res) {
         let { cid, pid } = req.params;
 
         if (!cid || !pid) {
             return res.status(400).json({ error: "Ingrese cid y pid" });
         }
+        if (cid === undefined) {
+            alert("Debe iniciar sesión antes de agregar productos")
+        }
+
 
         if (!isValidObjectId(cid) || !isValidObjectId(pid)) {
             return res.status(400).json({ error: "Ingrese cid / pid con formato válido de MongoDB id" });
@@ -214,7 +218,6 @@ export default class CartController {
 
         try {
             let cart = await cartService.getCartById({ _id: cid });
-
 
             if (!cart) {
                 cart = await cartService.createCart({ products: [] });
@@ -256,95 +259,75 @@ export default class CartController {
     }
 
     static async purchaseCart(req, res) {
-        let { cid } = req.params
-
-        if (!isValidObjectId(cid)) {
-            res.setHeader('Content-Type', 'application/json');
-            return res.status(400).json({ error: `Se ha ingresado un id de cart inválido` })
-        }
-
-        let cart = await cartService.getCartById({ _id: cid })
-        if (!cart) {
-            res.setHeader('Content-Type', 'application/json');
-            return res.status(400).json({ error: `Carrito inexistente. Id: ${cid}` })
-        }
-
-        if (cart.products.length === 0) {
-            res.setHeader('Content-Type', 'application/json');
-            return res.status(400).json({ error: `Carrito vacío...!!!` })
-        }
+        const { cid } = req.params;
 
         try {
-            let conStock = []
-            let sinStock = []
-            let total = 0
+            if (!isValidObjectId(cid)) {
+                return res.status(HTTP_BAD_REQUEST).json({ error: 'Invalid cart ID' });
+            }
 
-            for (let i = 0; i < cart.products.length; i++) {
+            const cart = await cartService.getCartById({ _id: cid });
+            if (!cart) {
+                return res.status(HTTP_BAD_REQUEST).json({ error: `Cart not found: ${cid}` });
+            }
 
-                let pid = cart.products[i].product
-                let quantity = carrito.productos[i].quantity
-                let product = await productsService.getProductById({ _id: pid })
-                if (!product || product.stock - quantity < 0) {
-                    sinStock.push(
-                        {
-                            product: pid, quantity
-                        }
-                    )
+            if (cart.products.length === 0) {
+                return res.status(HTTP_BAD_REQUEST).json({ error: 'Cart is empty' });
+            }
+
+            const itemsWithStock = [];
+            const itemsWithoutStock = [];
+            let total = 0;
+
+            for (const cartItem of cart.products) {
+                const product = await productsService.getProductById({ _id: cartItem.product });
+                if (!product || product.stock - cartItem.quantity < 0) {
+                    itemsWithoutStock.push({ product: cartItem.product, quantity: cartItem.quantity });
                 } else {
-                    conStock.push(
-                        {
-                            _id: pid,
-                            title: product.description,
-                            quantity,
-                            price: product.price,
-                            subtotal: product.price * quantity,
-                            stockPrevioCompra: product.stock
-                        }
-                    )
-                    product.stock = product.stock - quantity
-                    await ProductMongoDAO.update(pid, product)
-                    total += quantity * product.price
+                    itemsWithStock.push({
+                        _id: product._id,
+                        title: product.description,
+                        quantity: cartItem.quantity,
+                        price: product.price,
+                        subtotal: product.price * cartItem.quantity,
+                        stockPrevioCompra: product.stock,
+                    });
+                    product.stock -= cartItem.quantity;
+                    await productsService.updateProduct(product._id, product);
+                    total += cartItem.quantity * product.price;
                 }
             }
 
-            if (conStock.length === 0) {
-                res.setHeader('Content-Type', 'application/json');
-                return res.status(400).json({ error: `No hay ítems en condiciones de ser facturados (verificar stock / existencia del producto)` })
+            if (itemsWithStock.length === 0) {
+                return res.status(HTTP_BAD_REQUEST).json({ error: 'No items can be processed (check stock or product existence)' });
             }
-            let nroComp = Date.now()
-            let fecha = new Date()
-            let email = req.user.email
 
-            let nuevoTicket = await TicketsDAO.create(
-                {
-                    nroComp, fecha, email,
-                    items: conStock, total
-                }
-            )
+            const ticket = await TicketsDAO.create({
+                nroComp: Date.now(),
+                fecha: new Date(),
+                email: req.user.email,
+                items: itemsWithStock,
+                total,
+            });
 
-            carrito.productos = sinStock
-            await cartsDAO.updateCart(cid, carrito)
+            cart.products = itemsWithoutStock;
+            await cartService.updateCart(cid, cart);
 
-            let mensaje = `Su compra ha sido procesada...!!! <br>
-    Ticket: <b>${nroComp}</b> - importe a pagar: <b><i>$ ${total}</b></i> <br>
-    Contacte a pagos para finalizar la operación: pagos@cuchuflito.com
-    <br><br>
-    ${sinStock.length > 0 ? `Algunos items del carrito no fueron procesados. Verifique: ${JSON.stringify(sinStock, null, 5)}` : ""}`
+            const emailBody = `
+            Su compra ha sido procesada...!!!
+            Ticket: <b>${ticket.nroComp}</b> - importe a pagar: <b><i>$ ${total}</b></i>
+            Contacte a pagos para finalizar la operación: pagos@cuchuflito.com
+            ${itemsWithoutStock.length > 0 ? `Algunos items del carrito no fueron procesados. Verifique: ${JSON.stringify(itemsWithoutStock, null, 5)}` : ''}
+          `;
+            sendMail(req.user.email, 'Compra realizada con éxito...!!!', emailBody);
 
-            sendMail(email, "Compra realizada con éxito...!!!", mensaje)
-
-            res.setHeader('Content-Type', 'application/json');
-            return res.status(200).json({ nuevoTicket });
-
+            return res.status(HTTP_OK).json({ ticket });
         } catch (error) {
-            console.log(error);
-            res.setHeader('Content-Type', 'application/json');
-            return res.status(500).json(
-                {
-                    error: `Error inesperado en el servidor - Intente más tarde, o contacte a su administrador`,
-                    detalle: `${error.message}`
-                }
-            )
+            console.error(error);
+            return res.status(HTTP_INTERNAL_SERVER_ERROR).json({
+                error: 'Unexpected error occurred. Please try again later or contact your administrator',
+                detail: error.message,
+            });
         }
     }
 }

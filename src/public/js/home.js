@@ -1,6 +1,6 @@
 const agregar = async (pid) => {
     let h3User = document.getElementById("h3User");
-    let cid=h3User.dataset.carts
+    let cid=h3User.dataset.cart
 
     console.log('Product ID:', pid);
     console.log('Cart ID:', cid);
@@ -10,7 +10,7 @@ const agregar = async (pid) => {
         let respuesta = await fetch(`/api/carts/${cid}/product/${pid}`, {
             method: "PUT",
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type':'application/json'
             }
         });
 

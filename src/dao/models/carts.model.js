@@ -12,7 +12,7 @@ export const cartsModelo = mongoose.model(
             product: {
               type: mongoose.Types.ObjectId, ref: "products"
             },
-            cantidad: Number
+          quantity: Number
           }
         ]
       }

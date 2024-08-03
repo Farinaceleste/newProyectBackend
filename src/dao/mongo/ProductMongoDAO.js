@@ -10,8 +10,9 @@ export class ProductMongoDAO {
         return await productsModelo.find().lean()
     }
 
-    async getProductBy(filtro={}) {
-        return await productsModelo.findOne(filtro).lean()
+    async getProductById(filtro={}) {
+        let resultado = await productsModelo.findOne(filtro).lean()
+        return resultado
     }
 
     async updateProduct(id, product = {}) {

@@ -7,15 +7,13 @@ export const usersModelo = mongoose.model(
             first_name: String,
             last_name: String,
             age: Number,
-            email: {type: String, unique: true},
+            email: { type: String, unique: true },
             password: String,
             cart: {
                 type: [
                     {
-                        _id: {
-                            type: mongoose.Types.ObjectId,
-                            ref: 'cart'
-                        }
+                        type: mongoose.Types.ObjectId,
+                        ref: 'carts'
                     }
                 ],
                 default: []

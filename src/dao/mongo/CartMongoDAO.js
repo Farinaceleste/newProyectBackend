@@ -1,5 +1,4 @@
 import { cartsModelo } from "../models/carts.model.js"
-import { usersModelo } from "../models/users.model.js"
 
 export class CartMongoDAO {
 
@@ -8,8 +7,9 @@ export class CartMongoDAO {
         return await cartsModelo.find().lean()
     }
 
-    async getCartById(cid) {
-        return await cartsModelo.findOne({ _id: cid }).lean()
+    async getCartById(filtro={}) {
+        let resultado = await cartsModelo.findOne(filtro).lean()
+        return resultado
     }
 
     async getCartByPopulate(filter = {}) {
@@ -20,10 +20,15 @@ export class CartMongoDAO {
         return await cartsModelo.deleteOne({ _id: cid }).lean()
     }
 
-    async createCart() {
-        const newCart = await cartsModelo.create({ products: [] });
-        return newCart.toJSON()
-        
+    async createCart(initial = []) {
+
+        try {
+            const newCart = await cartsModelo.create({ products: initial });
+            console.log("nuevo carrito creado", newCart)
+            return newCart
+        } catch (error) {
+            console.error("Error al crear el carrito", error)
+        }
     }
 
     async updateCart(cid, cartUpdates) {
@@ -69,4 +74,5 @@ export class CartMongoDAO {
             );
         }
     }
+
 }

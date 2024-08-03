@@ -9,14 +9,14 @@ import bcrypt from "bcrypt";
 export const router = Router();
 
 router.get('/error', async (req, res) => {
-    res.status(500).json({ error: 'Algo salió mal', message: error.message });
+    res.status(500).json({ error: 'Algo salió mal' });
 });
 
 router.post('/registro', passport.authenticate("registro", {
     failureRedirect: "/api/sessions/error"
 }), (req, res) => {
     console.log(req.user)
-    return res.redirect(`/registro?mensaje=Registro exitoso para ${user.email}`)
+    return res.redirect(`/registro?mensaje=Registro exitoso para ${req.user.email}`)
 });
 
 
