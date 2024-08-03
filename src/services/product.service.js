@@ -10,7 +10,7 @@ class ProductService {
     }
 
     async getProductById(id) { 
-        return await this.dao.getProductById({ id });
+        return await this.dao.getProductById( {_id:id} );
     }
 
     async createProduct(product) {
@@ -18,7 +18,7 @@ class ProductService {
     }
 
     async deleteById(id){
-        return await this.dao.deleteById(id);
+        return await this.dao.deleteById({_id:id});
     }
 
     async updateProduct(id, product = {}) {

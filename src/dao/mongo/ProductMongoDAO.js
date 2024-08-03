@@ -11,8 +11,8 @@ export class ProductMongoDAO {
     }
 
     async getProductById(filtro={}) {
-        let resultado = await productsModelo.findOne(filtro).lean()
-        return resultado
+        return await productsModelo.findOne(filtro).lean()
+        
     }
 
     async updateProduct(id, product = {}) {

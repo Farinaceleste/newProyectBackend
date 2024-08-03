@@ -10,7 +10,7 @@ class CartService {
     }
 
     async getCartById(cid){
-        return await this.dao.getCartById(cid);
+        return await this.dao.getCartById({_id:cid});
     }
 
     async createCart(cart){
@@ -19,7 +19,7 @@ class CartService {
     }
 
     async deleteCart(cid){
-        return await this.dao.deleteCart({cid});
+        return await this.dao.deleteCart({_id:cid});
     }
 
     async deleteFromCart(pid, cid) {
