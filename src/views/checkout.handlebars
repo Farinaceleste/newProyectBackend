@@ -3,7 +3,9 @@
 <a href="/">Volver</a>
 <br>
 
-<h3 id="h3Usuario" data-cart="{{cart._id}}">Carrito de {{user.email}}</h3>
+<h2>Carrito de {{user.email}}</h2>
+<h3>Id carrito: {{cart._id}}</h3>
+
 <ul>
   {{#each cart.products}}
   <li>
