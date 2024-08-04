@@ -57,44 +57,29 @@ router.get('/user', (req, res) => {
 });
 
 router.post('/login', passport.authenticate("login", { failureRedirect: "/api/sessions/error" }), async (req, res) => {
+    let user = req.user;
+    user = { ...user };
+    delete user.password;
 
-    let user = req.user
-    user = { ...user }
-    delete user.password
-    let token = jwt.sign(user, config.auth.COOKIE, { expiresIn: "1h" })
-    req.session.user = user
-    console.log(req.user.role)
-    res.cookie(config.auth.COOKIE, token, { maxAge: 1000 * 60 * 60, signed: true, httpOnly: true })
+    req.session.user = user;
+
+    let token = jwt.sign(user, config.general.PASSWORD, { expiresIn: "1h" });
+
+    res.cookie(config.auth.COOKIE, token, { maxAge: 1000 * 60 * 60, signed: true, httpOnly: true });
 
     if (user) {
-        res.status(200).render("profile", { user })
-    }
-
-})
-
-
-
-router.get('/current', passportCall("current"), (req, res) => {
-    let user = req.session.user
-
-    try {
-        if (user) {
-            res.status(200).render("profile", { user })
-        } else {
-            res.status(401).redirect("/login")
-        }
-    } catch (error) {
-        console.error(error)
+        res.status(200).render("profile", { user });
     }
 });
 
-router.get('/github/callback',
+
+router.get('/github/callback',passport.authenticate("github", {failureRedirect:"/api/sessions/errorGitHub"}), (req,res)=>{
     passport.authenticate('github', { failureRedirect: '/login' }),
     async (req, res) => {
         req.session.usuario = req.user;
         res.status(200).json({ message: 'Registro exitoso', user: req.user });
     }
-);
+});
 
 router.get('/callbackGithub', passport.authenticate('github', { failureRedirect: '/api/sessions/error' }), async (req, res) => {
     req.session.user = req.user;
@@ -145,14 +130,15 @@ router.post("/recupero03", async (req, res) => {
 router.get("/logout", (req, res) => {
     req.session.destroy(e => {
         if (e) {
-            res.setHeader('Content-Type', 'application/json')
+            res.setHeader('Content-Type', 'application/json');
             res.status(500).json({
                 error: 'Error al cerrar sesión',
                 detalle: `${e.message}`
-            })
+            });
         } else {
-            console.log('Logout exitoso')
+            res.clearCookie(config.auth.COOKIE); 
+            console.log('Logout exitoso');
             res.redirect('/login');
         }
-    })
-})
+    });
+});

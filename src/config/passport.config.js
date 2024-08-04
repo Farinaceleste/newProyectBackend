@@ -9,14 +9,15 @@ import { cartService } from "../services/cart.service.js";
 import { config } from "./config.js";
 
 const buscarToken = (req) => {
-    let token = null
+    let token = null;
+    const cookieName = config.auth.COOKIE;
 
-    if (req.cookies.coderCookie) {
-        token = req.cookies.coderCookie
+    if (req.signedCookies[cookieName]) {
+        token = req.signedCookies[cookieName];
     }
 
-    return token
-}
+    return token;
+};
 
 export const initPassport = () => {
 
@@ -127,8 +128,8 @@ export const initPassport = () => {
     passport.use("current",
         new JwtStrategy.Strategy(
             {
-                secretOrKey: config.general.PASSWORD, 
-                jwtFromRequest: new JwtStrategy.ExtractJwt.fromExtractors([buscarToken])
+                secretOrKey: config.general.PASSWORD,
+                jwtFromRequest: JwtStrategy.ExtractJwt.fromExtractors([buscarToken])
             },
             async (user, done) => {
                 try {

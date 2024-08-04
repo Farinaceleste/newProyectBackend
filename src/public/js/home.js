@@ -1,8 +1,8 @@
 
 
 const agregar = async (pid) => {
-    const h3User = document.getElementById("h3User");
-    const cid = h3User.dataset.cart;
+    const h3Usuario = document.getElementById("h3Usuario");
+    const cid = h3Usuario.dataset.cart;
 
     if (!cid) {
         console.error("Cart ID is not set");

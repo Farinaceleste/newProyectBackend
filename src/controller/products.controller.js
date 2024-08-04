@@ -139,22 +139,22 @@ export default class ProductsController {
         }
     }
 
-    static getProductsPaginate = async (req, res) => {
-        const { page = 1, limit = 2 } = req.query;
-        const options = {
-            page: parseInt(page),
-            limit: parseInt(limit),
-            lean: true
-        };
+    // static getProductsPaginate = async (req, res) => {
+    //     const { page = 1, limit = 2 } = req.query;
+    //     const options = {
+    //         page: parseInt(page),
+    //         limit: parseInt(limit),
+    //         lean: true
+    //     };
 
-        try {
-            const result = await productsDAO.getProductsPaginados({}, options);
-            res.setHeader("Content-Type", "application/json");
-            return res.status(200).json(result);
-        } catch (error) {
-            console.error('Error al obtener los productos:', error);
-            CustomError.createError({ name: 'Error al obtener los productos', cause: argsProducts(req.body), message: 'Error al obtener los productos', code: ERRORES['bad request'] });
-            return res.status(500).json({ error: 'Error interno del servidor' });
-        }
-    }
+    //     try {
+    //         const result = await productsDAO.getProductsPaginados({}, options);
+    //         res.setHeader("Content-Type", "application/json");
+    //         return res.status(200).json(result);
+    //     } catch (error) {
+    //         console.error('Error al obtener los productos:', error);
+    //         CustomError.createError({ name: 'Error al obtener los productos', cause: argsProducts(req.body), message: 'Error al obtener los productos', code: ERRORES['bad request'] });
+    //         return res.status(500).json({ error: 'Error interno del servidor' });
+    //     }
+    // }
 }

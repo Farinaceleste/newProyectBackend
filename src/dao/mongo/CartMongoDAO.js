@@ -7,13 +7,15 @@ export class CartMongoDAO {
         return await cartsModelo.find().lean()
     }
 
-    async getCartById(filtro={}) {
+    async getCartById(filtro = {}) {
         let resultado = await cartsModelo.findOne(filtro).lean()
         return resultado
     }
 
     async getCartByPopulate(filter = {}) {
-        return await cartsModelo.findOne(filter).populate('products.product').lean()
+        return await cartsModelo.findOne(filter)
+            .populate('products.product') 
+            .lean();  
     }
 
     async deleteCart(cid) {
@@ -39,10 +41,17 @@ export class CartMongoDAO {
     }
 
     async deleteFromCart(cid, pid) {
-        return await cartsModelo.findByIdAndUpdate(cid, { $pull: { products: { _id: pid } } },
-            { new: true })
+        try {
+            return await cartsModelo.findByIdAndUpdate(
+                cid,
+                { $pull: { products: { product: pid } } },
+                { new: true }
+            );
+        } catch (error) {
+            throw new Error("Error al eliminar el producto del carrito: " + error.message);
+        }
     }
-
+    
     async updateQuantityProduct(cid, pid, quantity) {
         try {
             const cart = await cartsModelo.getCartById(cid);

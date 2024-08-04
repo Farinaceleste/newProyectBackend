@@ -1,23 +1,20 @@
 {{>menu}}
 <hr>
 <br>
-<h3 data-cart="{{user.cart}}" id="h3User">Usuario conectado: {{user.email}}</h3>
+<h3 data-carrito="{{user.cart}}" id="h3Usuario">Usuario conectado: {{user.email}}</h3>
 <a href="/checkout">Ver Carrito</a>
 <br>
 {{!-- 
 //<input type="text" id="cart" value="{{req.user.carts}}" hidden> --}}
+
 <div class="productList">
-    <ul class="container-cards">
-        {{#each products}}
-        <div class="product-card">
-            <li>
-                <h2 class="product-name">{{title}}</h2>
-                <p class="product-price">${{price}} </p>
-                <button onclick="agregar('{{_id}}')">Add to cart</button>
-            </li>
-        </div>
-        {{/each}}
-    </ul>
+    <ul>
+    {{#each products}}
+        <li>
+            {{title}} - precio: {{price}} <button onclick="agregar('{{_id}}')">Agregar a carrito</button>
+        </li>
+    {{/each}}
+</ul>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

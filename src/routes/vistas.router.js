@@ -7,7 +7,7 @@ import passport from "passport";
 
 export const router = Router()
 
-router.get("/",  async (req, res) => {
+router.get("/", async (req, res) => {
 
     let user = req.session.user
 
@@ -17,7 +17,7 @@ router.get("/",  async (req, res) => {
     })
 })
 
-router.get("/profile", auth(['admin', 'user']), async (req, res) => {
+router.get("/profile", async (req, res) => {
     let user = req.session.user
 
     try {
@@ -53,7 +53,6 @@ router.get('/loggerTest', async (req, res) => {
     req.logger.error("prueba log level error")
 
     res.status(200).render('home')
-
 })
 
 router.get("/realtimeproducts", async (req, res) => {
@@ -66,10 +65,10 @@ router.get("/realtimeproducts", async (req, res) => {
     })
 });
 
-router.get("/chat",auth(['admin', 'user']), async (req, res) => {
-
-    res.status(200).render('chat')
-})
+router.get("/chat", auth, async (req, res) => {
+    console.log('User DTO:', req.userDTO); 
+    res.status(200).render('chat');
+});
 
 router.get('/login', async (req, res) => {
 
@@ -85,33 +84,30 @@ router.get('/registro', async (req, res) => {
     res.status(200).render('registro', { error, mensaje, login: req.user })
 })
 
-router.get("/checkout", async (req, res) => {
+router.get("/checkout", passport.authenticate("current"), async (req, res) => {
     try {
-      if (!req.user) {
-        
-        return res.redirect("/login");
-      }
+        if (!req.user) {
+            return res.redirect("/login");
+        }
 
-      const cartId = req.user.cart;
+        let cart = await cartService.getCartByPopulate({ _id: req.user.cart });
 
-      const cart = await cartService.getCartById(cartId);
-  
-      res.render("checkout", { user: req.user, cart });
+        res.render("checkout", { user: req.user, cart });
     } catch (error) {
-      console.error(error);
+        console.error(error);
     }
-  });
+});
 
-router.get("/products", passport.authenticate("current"),async (req, res) => {
+router.get("/products", passport.authenticate("current"), async (req, res) => {
 
     let products = await productsService.getProducts()
 
-    let user = req.session.user
+    let user = req.user
 
     res.setHeader("Content-Type", "text/html")
-    res.status(200).render("products",{
+    res.status(200).render("products", {
         products, user
     })
-    
+
 })
 

@@ -4,10 +4,11 @@ export const ticketModelo = mongoose.model(
     'tickets',
     new mongoose.Schema(
         {
-            code: { type: String, required: true, unique: true },
-            purchase_datetime: { type: Date, required: true, default: Date.now },
-            amount: { type: Number, required: true },
-            purchaser: { type: String, required: true }
+            nroComp: String, 
+            fecha: Date, 
+            email: String, 
+            items: Array, 
+            total: Number
         },
         {
             timestamps: true

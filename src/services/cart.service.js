@@ -13,6 +13,10 @@ class CartService {
         return await this.dao.getCartById({_id:cid});
     }
 
+    async getCartByPopulate(cid){
+        return await this.dao.getCartByPopulate({_id:cid})
+    }
+
     async createCart(cart){
         return await this.dao.createCart(cart);
         
@@ -23,7 +27,7 @@ class CartService {
     }
 
     async deleteFromCart(pid, cid) {
-        return await this.dao.deleteFromCart({pid, cid});
+        return await this.dao.deleteFromCart(cid, pid);
     }
 
     async updateCart(cid, cart){
