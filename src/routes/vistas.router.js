@@ -17,7 +17,7 @@ router.get("/",  async (req, res) => {
     })
 })
 
-router.get("/profile", async (req, res) => {
+router.get("/profile", auth(['admin', 'user']), async (req, res) => {
     let user = req.session.user
 
     try {
@@ -66,7 +66,7 @@ router.get("/realtimeproducts", async (req, res) => {
     })
 });
 
-router.get("/chat", async (req, res) => {
+router.get("/chat",auth(['admin', 'user']), async (req, res) => {
 
     res.status(200).render('chat')
 })
@@ -88,6 +88,7 @@ router.get('/registro', async (req, res) => {
 router.get("/checkout", async (req, res) => {
     try {
       if (!req.user) {
+        
         return res.redirect("/login");
       }
 

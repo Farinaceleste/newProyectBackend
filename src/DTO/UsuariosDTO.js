@@ -1,4 +1,4 @@
-export default class UsuariosDTO {
+export class UsuariosDTO {
     constructor(user) {
         if (!user || typeof user !== 'object') {
             throw new Error('Usuario inválido');

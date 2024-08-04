@@ -12,11 +12,22 @@ function isValidObjectId(id) {
     return mongoose.Types.ObjectId.isValid(id);
 }
 
+function requireRol(role) {
+    if (req.user.role === 'user') {
+        return res.status(401).json({ error: 'No tienes permisos suficientes para realizar esta acción' });
+    }
+}
+
+
 export default class ProductsController {
 
     static getProducts = async (req, res) => {
         try {
+
             const products = await productsService.getProducts();
+
+            requireRol() 
+            
             res.setHeader("Content-Type", "application/json");
             return res.status(200).json({ products });
         } catch (error) {

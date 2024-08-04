@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 
-
 export const cartsModelo = mongoose.model(
   'carts',
   new mongoose.Schema(
     {
-      userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+      // userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+      // cid: { type: mongoose.Schema.Types.ObjectId, ref: 'carts' },
       products: {
         type: [
           {

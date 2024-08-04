@@ -26,8 +26,8 @@ class CartService {
         return await this.dao.deleteFromCart({pid, cid});
     }
 
-    async updateCart(pid, cid){
-        return await this.dao.updateCart({pid, cid});
+    async updateCart(cid, cart){
+        return await this.dao.updateCart({_id: cid}, cart);
     }
 
     async getCartByPopulate(){

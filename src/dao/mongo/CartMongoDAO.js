@@ -33,7 +33,7 @@ export class CartMongoDAO {
 
     async updateCart(cid, cartUpdates) {
         return await cartsModelo.updateOne(
-            { _id: cid },
+            cid,
             { $set: cartUpdates }
         ).lean();
     }

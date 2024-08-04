@@ -109,7 +109,7 @@ export default class CartController {
     }
 
 
-    static async updateCart(req, res) {
+    static async addProdToCart(req, res) {
         const { cid, pid } = req.params;
         const userId = req.user._id;
 
@@ -123,9 +123,9 @@ export default class CartController {
                 return res.status(400).json({ error: `Carrito inexistente: ${cid}` });
             }
 
-            if (cart.userId.toString() !== userId) {
-                return res.status(403).json({ error: 'No tienes permiso para actualizar este carrito' });
-            }
+            // if (cart.userId.toString() !== userId) {
+            //     return res.status(403).json({ error: 'No tienes permiso para actualizar este carrito' });
+            // }
 
             let product = await productsService.getProductById({ _id: pid });
             if (!product) {
@@ -136,14 +136,14 @@ export default class CartController {
                 return res.status(400).json({ error: `No hay stock para el producto: ${pid}` });
             }
 
-            const productIndex = cart.products.findIndex(p => p.product.toString() === pid);
+            const productIndex = cart.products.findIndex(p => p.product.toString() === pid.toString());
             if (productIndex === -1) {
-                cart.products.push({ product: pid, cantidad: 1 });
+                cart.products.push({ product: pid, quantity: 1 });
             } else {
-                cart.products[productIndex].cantidad++;
+                cart.products[productIndex].quantity++;
             }
 
-            const resultado = await cartService.updateCart({ cid, cart });
+            const resultado = await cartService.updateCart({ _id: cid}, cart );
             if (resultado.modifiedCount > 0) {
                 return res.status(200).json({ payload: 'Cart actualizado' });
             } else {
@@ -201,62 +201,64 @@ export default class CartController {
         }
     }
 
-    static async addProdToCart(req, res) {
-        let { cid, pid } = req.params;
+    // static async addProdToCart(req, res) {
+    //     let { cid, pid } = req.params;
 
-        if (!cid || !pid) {
-            return res.status(400).json({ error: "Ingrese cid y pid" });
-        }
-        if (cid === undefined) {
-            alert("Debe iniciar sesión antes de agregar productos")
-        }
+    //     if (!cid || !pid) {
+    //         return res.status(400).json({ error: "Ingrese cid y pid" });
+    //     }
+    //     if (cid === undefined) {
+    //         alert("Debe iniciar sesión antes de agregar productos")
+    //     }
 
 
-        if (!isValidObjectId(cid) || !isValidObjectId(pid)) {
-            return res.status(400).json({ error: "Ingrese cid / pid con formato válido de MongoDB id" });
-        }
+    //     if (!isValidObjectId(cid) || !isValidObjectId(pid)) {
+    //         return res.status(400).json({ error: "Ingrese cid / pid con formato válido de MongoDB id" });
+    //     }
+        
+    //     try {
+    //             let cart = await cartService.getCartById({ _id: cid });
+        
+    //             console.log(cart);
+    //         if (!cart) {
+    //             cart = await cartService.createCart({ products: [] });
+    //             console.log(newCart._id)
+    //         }
 
-        try {
-            let cart = await cartService.getCartById({ _id: cid });
+    //         let product = await productsService.getProductById({ _id: pid });
+    //         if (!product) {
+    //             return res.status(404).json({ error: `Producto inexistente: ${pid}` });
+    //         }
 
-            if (!cart) {
-                cart = await cartService.createCart({ products: [] });
-                console.log(newCart._id)
-            }
+    //         if (product.stock <= 0) {
+    //             return res.status(400).json({ error: `No hay stock para el producto: ${pid}` });
+    //         }
 
-            let product = await productsService.getProductById({ _id: pid });
-            if (!product) {
-                return res.status(404).json({ error: `Producto inexistente: ${pid}` });
-            }
+    //         let indiceProducto = cart.products.findIndex(p => p.product.toString() === pid.toString());
+    //         if (indiceProducto === -1) {
+    //             cart.products.push({
+    //                 product: pid,
+    //                 quantity: 1
+    //             });
+    //         } else {
+    //             cart.products[indiceProducto].quantity++;
+    //         }
 
-            if (product.stock <= 0) {
-                return res.status(400).json({ error: `No hay stock para el producto: ${pid}` });
-            }
-
-            let indiceProducto = cart.products.findIndex(p => p.product.toString() === pid.toString());
-            if (indiceProducto === -1) {
-                cart.products.push({
-                    product: pid,
-                    cantidad: 1
-                });
-            } else {
-                cart.products[indiceProducto].cantidad++;
-            }
-
-            let resultado = await cartService.updateCart(cid, cart);
-            if (resultado.modifiedCount > 0) {
-                return res.status(200).json({ message: "Carrito actualizado exitosamente" });
-            } else {
-                return res.status(500).json({ error: "Error inesperado en el servidor. Intente más tarde o contacte a su administrador." });
-            }
-        } catch (error) {
-            console.log(error);
-            return res.status(500).json({
-                error: "Error inesperado en el servidor. Intente más tarde o contacte a su administrador.",
-                detalle: error.message
-            });
-        }
-    }
+    //         let resultado = await cartService.updateCart(cid, cart);
+    //         console.log(resultado);
+    //         if (resultado.modifiedCount > 0) {
+    //             return res.status(200).json({ message: "Carrito actualizado exitosamente" });
+    //         } else {
+    //             return res.status(500).json({ error: "Error inesperado en el servidor. Intente más tarde o contacte a su administrador." });
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //         return res.status(500).json({
+    //             error: "Error inesperado en el servidor. Intente más tarde o contacte a su administrador.",
+    //             detalle: error.message
+    //         });
+    //     }
+    // }
 
     static async purchaseCart(req, res) {
         const { cid } = req.params;

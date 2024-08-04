@@ -1,35 +1,35 @@
-const agregar = async (pid) => {
-    let h3User = document.getElementById("h3User");
-    let cid=h3User.dataset.cart
 
-    console.log('Product ID:', pid);
-    console.log('Cart ID:', cid);
-    console.log(h3User)
+
+const agregar = async (pid) => {
+    const h3User = document.getElementById("h3User");
+    const cid = h3User.dataset.cart;
+
+    if (!cid) {
+        console.error("Cart ID is not set");
+        return;
+    }
+
+    console.log(`Product ID: ${pid}`);
+    console.log(`Cart ID: ${cid}`);
+    console.log(h3User);
 
     try {
-        let respuesta = await fetch(`/api/carts/${cid}/product/${pid}`, {
+        const url = `/api/carts/${cid}/product/${pid}`;
+        const response = await fetch(url, {
             method: "PUT",
-            headers: {
-                'Content-Type':'application/json'
-            }
+            headers: { "Content-Type": "application/json" },
         });
 
-        if (!respuesta.ok) {
-            const text = await respuesta.text();
-            console.error('Response text:', text);
-            throw new Error('Failed to add product to cart');
-        }
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(errorMessage);
+        } 
+        const data = await response.json();
+        console.log(data);
 
-        let datos = await respuesta.json();
-        console.log(datos);
-
-        if (respuesta.ok) {
-            alert("Producto agregado al carrito");
-        } else {
-            alert(datos.error);
-        }
+        Swal.fire("Producto agregado al carrito!");
     } catch (error) {
-        console.error('Error:', error);
-        alert('Error al agregar el producto al carrito');
+        console.error(`Error: ${error}`);
+        alert("Error al agregar el producto al carrito");
     }
 };
